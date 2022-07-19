@@ -3,6 +3,8 @@
 
 const DateTime = luxon.DateTime;
 
+const DUMMY_LEAP_YR = 2024; // ensures functionality for Feb 29 birthdays
+
 class Sign{
     constructor(name, lastDayOfLeapYr){
         this.name = name;
@@ -23,6 +25,7 @@ const SIGNS = [
     new Sign('scorpio', 326),
     new Sign('sagittarius', 356)
 ];
+
 
 
 //FUNCTIONS
@@ -63,4 +66,10 @@ function getSignName(dayOfYr){
         return sign.name;
     else
         return 'capricorn';
+}
+
+
+// Get day of yr from <full month name> + <day of month> (e.g. 'January 1')
+function getDayOfYr(month, day){
+    return +DateTime.fromFormat(`${month} ${day} ${DUMMY_LEAP_YR}`, 'MMMM d y').toFormat('o');
 }
