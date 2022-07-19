@@ -3,7 +3,7 @@
 
 const DateTime = luxon.DateTime;
 
-const DUMMY_LEAP_YR = 2024; // ensures functionality for Feb 29 birthdays
+const DUMMY_LEAP_YR = 2024; // assume that all birthdays occur in a leap year (to ensure Feb 29 functionality)
 
 class Sign{
     constructor(name, lastDayOfLeapYr){
@@ -31,8 +31,10 @@ const SIGNS = [
 //FUNCTIONS
 
 // Get horoscope based on sign name
-function getHoroscope(sign){
-    fetch('https://sameer-kumar-aztro-v1.p.rapidapi.com/?sign=' + sign + '&day=today',
+function getHoroscope(month, day){
+    var signName = getSignName(getDayOfYr(month, day));
+
+    fetch('https://sameer-kumar-aztro-v1.p.rapidapi.com/?sign=' + signName + '&day=today',
         {
             method: 'POST',
             headers: {
@@ -58,18 +60,14 @@ function getHoroscope(sign){
 }
 
 
-// Get sign name based on day of yr
-function getSignName(dayOfYr){
-    var sign = SIGNS.find(elem => dayOfYr <= elem.lastDay)
+// Get sign name based on month and day
+function getSignName(month, day){
+    var dayOfYr = +DateTime.fromFormat(`${month} ${day} ${DUMMY_LEAP_YR}`, 'MMMM d y').toFormat('o');
+
+    var sign = SIGNS.find(elem => dayOfYr <= elem.lastDay);
 
     if (sign)
         return sign.name;
     else
         return 'capricorn';
-}
-
-
-// Get day of yr from <full month name> + <day of month> (e.g. 'January 1')
-function getDayOfYr(month, day){
-    return +DateTime.fromFormat(`${month} ${day} ${DUMMY_LEAP_YR}`, 'MMMM d y').toFormat('o');
 }
