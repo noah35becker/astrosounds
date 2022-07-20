@@ -87,3 +87,15 @@ function getSignName(month, day){
     else
         return 'capricorn';
 }
+
+
+
+//LISTENERS
+$('select[name="month"]').on('change', function(){
+    setNumDaysInMonth($(this).val());
+});
+
+
+
+//INITIALIZE PAGE
+$('select[name="month"]').trigger('change'); // initializes day dropdown to correct # of days for the initial month
