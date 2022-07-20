@@ -34,7 +34,7 @@ const daySelectorEl = $('select[name="day"]');
 //FUNCTIONS
 
 // Populate user input 'days' dropdown with correct # of days for given month
-function setNumDaysInMonth(month){
+function setNumDays(month){
     var firstOfThisMonth = DateTime.fromFormat(`${month} 1 ${DUMMY_LEAP_YR}`, 'MMMM d y');
     var firstOfNextMonth = firstOfThisMonth.plus({months: 1});
     var daysInMonth = firstOfNextMonth.diff(firstOfThisMonth, 'days').toObject().days;
@@ -73,7 +73,7 @@ function getHoroscope(month, day){
             })
         })
         .catch(error =>
-            console.log('system error') //UPDATE LATER with something that the user can actually see
+            console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
         );
 }
 
@@ -97,7 +97,7 @@ function getSignName(month, day){
 //Update # of days when month is (re-)selected
 monthSelectorEl.on('change', function(event){
     event.preventDefault();
-    setNumDaysInMonth($(this).val());
+    setNumDays($(this).val());
 });
 
 
@@ -106,8 +106,6 @@ $('#birthday-input').on('submit', function(event){
     event.preventDefault();
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
-
-
 
 
 
