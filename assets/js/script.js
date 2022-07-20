@@ -30,6 +30,22 @@ const SIGNS = [
 
 //FUNCTIONS
 
+// Populate user input 'days' dropdown with correct # of days for given month
+function setNumDaysInMonth(month){
+    var firstOfThisMonth = DateTime.fromFormat(`${month} 1 ${DUMMY_LEAP_YR}`, 'MMMM d y');
+    var firstOfNextMonth = firstOfThisMonth.plus({months: 1});
+
+    var daysInMonth = firstOfNextMonth.diff(firstOfThisMonth, 'days').toObject().days;
+
+    var dayInputEl = $('select[name="day"]')
+        .empty();
+
+    for (i = 1; i <= daysInMonth; i++){
+        dayInputEl.append($(`<option value='${i}'>${i}</option>`));
+    }
+}
+
+
 // Get horoscope based on sign name
 function getHoroscope(month, day){
     var signName = getSignName(month, day);
