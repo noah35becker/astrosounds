@@ -26,6 +26,9 @@ const SIGNS = [
     new Sign('sagittarius', 356)
 ];
 
+const monthSelectorEl = $('select[name="month"]');
+const daySelectorEl = $('select[name="day"]');
+
 
 
 //FUNCTIONS
@@ -36,15 +39,14 @@ function setNumDaysInMonth(month){
     var firstOfNextMonth = firstOfThisMonth.plus({months: 1});
     var daysInMonth = firstOfNextMonth.diff(firstOfThisMonth, 'days').toObject().days;
 
-    var dayInputEl = $('select[name="day"]')
-    var daySelected = dayInputEl.val() || 1;
+    var daySelected = daySelectorEl.val() || 1;
     
-    dayInputEl.empty();
+    daySelectorEl.empty();
     for (i = 1; i <= daysInMonth; i++)
-        dayInputEl.append($(`<option value='${i}'>${i}</option>`));
-        
+        daySelectorEl.append($(`<option value='${i}'>${i}</option>`));
+
     if (daySelected <= daysInMonth)
-        dayInputEl.val(daySelected);
+        daySelectorEl.val(daySelected);
 }
 
 
@@ -63,7 +65,6 @@ function getHoroscope(month, day){
     )
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             return {
                 color: data.color,
                 desc: data.description,
@@ -93,7 +94,7 @@ function getSignName(month, day){
 
 
 //LISTENERS
-$('select[name="month"]').on('change', function(event){
+monthSelectorEl.on('change', function(event){
     event.preventDefault();
     setNumDaysInMonth($(this).val());
 });
@@ -101,4 +102,6 @@ $('select[name="month"]').on('change', function(event){
 
 
 //INITIALIZE PAGE
-$('select[name="month"]').trigger('change'); // initializes day dropdown to correct # of days for the initial month
+monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
+monthSelectorEl.trigger('change'); // initialize day dropdown w/ correct # of days for the initial month
+daySelectorEl.val(+DateTime.now().toFormat('d')); // set initial day-of-month to today's
