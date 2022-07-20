@@ -65,17 +65,16 @@ function getHoroscope(month, day){
     )
         .then(response => response.json())
         .then(data => {
-            return {
+            console.log({ //MARIELLE: THIS OBJECT will need to be passed directly to the keyword extractor from this point
                 color: data.color,
                 desc: data.description,
                 luckyNum: data.lucky_number,
                 mood: data.mood
-            };
+            })
         })
         .catch(error =>
-            console.log('system error')
+            console.log('system error') //UPDATE LATER with something that the user can actually see
         );
-
 }
 
 
@@ -94,10 +93,21 @@ function getSignName(month, day){
 
 
 //LISTENERS
+
+//Update # of days when month is (re-)selected
 monthSelectorEl.on('change', function(event){
     event.preventDefault();
     setNumDaysInMonth($(this).val());
 });
+
+
+//Upon birthday submission, begin the chain of API calls
+$('#birthday-input').on('submit', function(event){
+    event.preventDefault();
+    getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
+});
+
+
 
 
 
