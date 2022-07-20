@@ -34,15 +34,17 @@ const SIGNS = [
 function setNumDaysInMonth(month){
     var firstOfThisMonth = DateTime.fromFormat(`${month} 1 ${DUMMY_LEAP_YR}`, 'MMMM d y');
     var firstOfNextMonth = firstOfThisMonth.plus({months: 1});
-
     var daysInMonth = firstOfNextMonth.diff(firstOfThisMonth, 'days').toObject().days;
 
     var dayInputEl = $('select[name="day"]')
-        .empty();
-
-    for (i = 1; i <= daysInMonth; i++){
+    var daySelected = dayInputEl.val() || 1;
+    
+    dayInputEl.empty();
+    for (i = 1; i <= daysInMonth; i++)
         dayInputEl.append($(`<option value='${i}'>${i}</option>`));
-    }
+        
+    if (daySelected <= daysInMonth)
+        dayInputEl.val(daySelected);
 }
 
 
@@ -91,7 +93,8 @@ function getSignName(month, day){
 
 
 //LISTENERS
-$('select[name="month"]').on('change', function(){
+$('select[name="month"]').on('change', function(event){
+    event.preventDefault();
     setNumDaysInMonth($(this).val());
 });
 
