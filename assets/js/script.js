@@ -26,9 +26,29 @@ const SIGNS = [
     new Sign('sagittarius', 356)
 ];
 
+const monthSelectorEl = $('select[name="month"]');
+const daySelectorEl = $('select[name="day"]');
+
 
 
 //FUNCTIONS
+
+// Populate user input 'days' dropdown with correct # of days for given month
+function setNumDays(month){
+    var firstOfThisMonth = DateTime.fromFormat(`${month} 1 ${DUMMY_LEAP_YR}`, 'MMMM d y');
+    var firstOfNextMonth = firstOfThisMonth.plus({months: 1});
+    var daysInMonth = firstOfNextMonth.diff(firstOfThisMonth, 'days').toObject().days;
+
+    var daySelected = daySelectorEl.val() || 1;
+    
+    daySelectorEl.empty();
+    for (i = 1; i <= daysInMonth; i++)
+        daySelectorEl.append($(`<option value='${i}'>${i}</option>`));
+
+    if (daySelected <= daysInMonth)
+        daySelectorEl.val(daySelected);
+}
+
 
 // Get horoscope based on sign name
 function getHoroscope(month, day){
@@ -45,18 +65,16 @@ function getHoroscope(month, day){
     )
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            return {
+            console.log({ //MARIELLE: THIS OBJECT will need to be passed directly to the keyword extractor from this point
                 color: data.color,
                 desc: data.description,
                 luckyNum: data.lucky_number,
                 mood: data.mood
-            };
+            })
         })
         .catch(error =>
-            console.log('system error')
+            console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
         );
-
 }
 
 
@@ -71,3 +89,27 @@ function getSignName(month, day){
     else
         return 'capricorn';
 }
+
+
+
+//LISTENERS
+
+//Update # of days when month is (re-)selected
+monthSelectorEl.on('change', function(event){
+    event.preventDefault();
+    setNumDays($(this).val());
+});
+
+
+//Upon birthday submission, begin the chain of API calls
+$('#birthday-input').on('submit', function(event){
+    event.preventDefault();
+    getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
+});
+
+
+
+//INITIALIZE PAGE
+monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
+monthSelectorEl.trigger('change'); // initialize day dropdown w/ correct # of days for the initial month
+daySelectorEl.val(+DateTime.now().toFormat('d')); // set initial day-of-month to today's
