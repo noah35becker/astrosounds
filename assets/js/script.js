@@ -72,19 +72,47 @@ function getSignName(month, day) {
 // Get key phrases given text input
 function getKeyPhrases(inputText) {
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'content-type': 'application/json',
-      'X-RapidAPI-Key': 'db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba',
-      'X-RapidAPI-Host': 'textprobe.p.rapidapi.com'
+      "content-type": "application/json",
+      "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
+      "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
     },
-    body: '{"text":"Artificial intelligence is a hot area in the financial world right now.   In 2014, Google bought DeepMind with an acquisition price of more than $500 million.  Google is an even better investment than it was before, and investors are excited.  With my windfall, I purchased a yacht that is about 10m."}'
+    body: '{"text":"' + inputText + '"}',
   };
-  
-  fetch('https://textprobe.p.rapidapi.com/topics', options)
-    .then(response => response.json())
-    .then(response => console.log(response))
-    .catch(err => console.error(err));
+
+  fetch("https://textprobe.p.rapidapi.com/topics", options)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.keywords);
+      return data.keywords;
+    })
+    .catch((err) => console.error(err));
 }
 
-getKeyPhrases("hello");
+// Get key feelings or topics given text input, extractType options = ["topics","feelings"]
+function extractFromText(inputText, extractType) {
+  const options = {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
+      "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
+    },
+    body: '{"text":"' + inputText + '"}',
+  };
+
+  fetch("https://textprobe.p.rapidapi.com/" + extractType, options)
+    .then((response) => response.json())
+    .then((data) => {
+      if(extractType=="topics"){
+        console.log(data.keywords);
+        return data.keywords;
+      }
+      else if (extractType=="feelings"){
+        console.log(data.emotion_prediction);
+        return data.emotion_prediction;
+      }
+    })
+    .catch((err) => console.error(err));
+}
