@@ -71,7 +71,7 @@ function getHoroscope(month, day){
                 mood: data.mood
             };
             extractFromText(horoscopeObj,"topics");
-            extractFromText(horoscopeObj,"feelings");
+//             extractFromText(horoscopeObj,"feelings");
         })
         .catch(error =>
             console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
