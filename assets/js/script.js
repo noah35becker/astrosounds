@@ -64,18 +64,14 @@ function getHoroscope(month, day){
     )
         .then(response => response.json())
         .then(data => {
-            extractFromText({ 
+            var horoscopeObj = { 
                 color: data.color,
                 desc: data.description,
                 luckyNum: data.lucky_number,
                 mood: data.mood
-            },"topics");
-            extractFromText({ 
-              color: data.color,
-              desc: data.description,
-              luckyNum: data.lucky_number,
-              mood: data.mood
-          },"feelings");
+            };
+            extractFromText(horoscopeObj,"topics");
+            extractFromText(horoscopeObj,"feelings");
         })
         .catch(error =>
             console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
@@ -111,12 +107,17 @@ function extractFromText(horoscopeObj, extractType) {
     .then((response) => response.json())
     .then((data) => {
       if(extractType=="topics"){
-        console.log(data.keywords);
-        return data.keywords;
+        var keywords= data.keywords;
+        keywords.push(horoscopeObj.color);
+        keywords.push(horoscopeObj.luckyNum);
+        console.log(keywords);
+        return keywords;
       }
       else if (extractType=="feelings"){
-        console.log(data.emotion_prediction);
-        return data.emotion_prediction;
+        var feelings = [data.emotion_prediction];
+        feelings.push(horoscopeObj.mood);
+        console.log(feelings);
+        return feelings;
       }
     })
     .catch((err) => console.error(err));
