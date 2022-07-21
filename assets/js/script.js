@@ -1,4 +1,3 @@
-
 //GLOBAL VARIABLES
 
 const DateTime = luxon.DateTime;
@@ -65,12 +64,14 @@ function getHoroscope(month, day){
     )
         .then(response => response.json())
         .then(data => {
-            console.log({ //MARIELLE: THIS OBJECT will need to be passed directly to the keyword extractor from this point
+            var horoscopeObj = { 
                 color: data.color,
                 desc: data.description,
                 luckyNum: data.lucky_number,
                 mood: data.mood
-            })
+            };
+            extractFromText(horoscopeObj,"topics");
+//             extractFromText(horoscopeObj,"feelings");
         })
         .catch(error =>
             console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
@@ -88,6 +89,38 @@ function getSignName(month, day){
         return sign.name;
     else
         return 'capricorn';
+}
+
+// Get key feelings or topics given text input, extractType options = ["topics","feelings"]
+function extractFromText(horoscopeObj, extractType) {
+  const options = {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
+      "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
+    },
+    body: '{"text":"' + horoscopeObj.desc + '"}',
+  };
+
+  fetch("https://textprobe.p.rapidapi.com/" + extractType, options)
+    .then((response) => response.json())
+    .then((data) => {
+      if(extractType=="topics"){
+        var keywords= data.keywords;
+        keywords.push(horoscopeObj.color);
+        keywords.push(horoscopeObj.luckyNum);
+        console.log(keywords);
+        return keywords;
+      }
+      else if (extractType=="feelings"){
+        var feelings = [data.emotion_prediction];
+        feelings.push(horoscopeObj.mood);
+        console.log(feelings);
+        return feelings;
+      }
+    })
+    .catch((err) => console.error(err));
 }
 
 
