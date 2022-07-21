@@ -69,27 +69,6 @@ function getSignName(month, day) {
   else return "capricorn";
 }
 
-// Get key phrases given text input
-function getKeyPhrases(inputText) {
-  const options = {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
-      "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
-    },
-    body: '{"text":"' + inputText + '"}',
-  };
-
-  fetch("https://textprobe.p.rapidapi.com/topics", options)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data.keywords);
-      return data.keywords;
-    })
-    .catch((err) => console.error(err));
-}
-
 // Get key feelings or topics given text input, extractType options = ["topics","feelings"]
 function extractFromText(inputText, extractType) {
   const options = {
