@@ -28,9 +28,8 @@ const SIGNS = [
 //FUNCTIONS
 
 // Get horoscope based on sign name
-function getHoroscope(month, day) {
-  var signName = getSignName(getDayOfYr(month, day));
-
+function getHoroscope(month, day){
+    var signName = getSignName(month, day);
   fetch(
     "https://sameer-kumar-aztro-v1.p.rapidapi.com/?sign=" +
       signName +
