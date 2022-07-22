@@ -140,7 +140,10 @@ $('#birthday-input').on('submit', function(event){
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
 
-
+// required to load selects using materialize
+$(document).ready(function(){
+    $('select').formSelect();
+  });
 
 //INITIALIZE PAGE
 monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
