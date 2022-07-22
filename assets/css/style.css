@@ -7,3 +7,11 @@
 
 .collection-item,.collection {    margin-top: 10px !important;
     border: none !important;}
+
+.no-margin {
+    margin: 0;
+}
+
+img {
+    max-width: 75% !important;
+}
