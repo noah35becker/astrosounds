@@ -110,6 +110,7 @@ function extractFromText(horoscopeObj, extractType) {
         var keywords= data.keywords;
         keywords.push(horoscopeObj.color);
         keywords.push(horoscopeObj.luckyNum);
+        keywords.push(horoscopeObj.mood);
         console.log(keywords);
         return keywords;
       }
