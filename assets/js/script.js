@@ -70,6 +70,9 @@ function getHoroscope(month, day){
                 luckyNum: data.lucky_number,
                 mood: data.mood
             };
+
+            // Send horoscopeObj.color to an image generator, then pass the image to getDomColor() to generate the page's background color based on user submission
+
             extractFromText(horoscopeObj,"topics");
 //             extractFromText(horoscopeObj,"feelings");
         })
@@ -90,6 +93,18 @@ function getSignName(month, day){
     else
         return 'capricorn';
 }
+
+
+// Get hex code of an image's dominant color
+function getDomColor(imageURL){
+    fetch(`https://api.sightengine.com/1.0/check.json?models=properties&api_user=1573388445&api_secret=ekggwH3iTJryZir7enN3&url=${imageURL}`)
+        .then(response => response.json())
+        .then(data => console.log(data.colors.dominant.hex))
+        .catch(error =>
+            console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
+        )
+}
+
 
 // Get key feelings or topics given text input, extractType options = ["topics","feelings"]
 function extractFromText(horoscopeObj, extractType) {
