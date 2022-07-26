@@ -153,8 +153,9 @@ function spotifySearch(){
 	.then(response => response.json())
 	.then(response => console.log(response))
 	.catch(err => console.error(err));
-    let response.json = spotifySearchResults
 }
+
+var jsonResponse;
 
 // call spotify search function 
 spotifySearch();
