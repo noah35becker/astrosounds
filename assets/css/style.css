@@ -32,7 +32,14 @@
         vertical-align: middle;
     }
     
+  
     
+/*DESCRIPTION*/
+    #description{
+        font-style: italic;
+        margin-bottom: 35px;
+        font-size: 2rem;
+    }
 
 /* USER INPUT / SEARCH HISTORY */
     .collection, .collection-item{
