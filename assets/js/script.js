@@ -28,6 +28,9 @@ const SIGNS = [
 const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
 
+var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+const MAX_NUM_SEARCH_HISTORY = 4;
+
 
 
 //FUNCTIONS
@@ -122,6 +125,45 @@ function extractFromText(horoscopeObj, extractType) {
       }
     })
     .catch((err) => console.error(err));
+}
+
+
+//Save searched birthday history to localStorage
+function saveSearchHistory(newDay, newMonth){
+    var trulyNewItem = true;
+    
+    for (i = 0; i < searchHistory.length; i++)
+        if (newDay === searchHistory[i].day && newMonth === searchHistory[i].month){
+            trulyNewItem = false;
+            searchHistory.unshift(searchHistory.splice(i, 1)[0]);
+            break;
+        }
+    
+    if (trulyNewItem){
+        searchHistory.unshift({
+            day: newDay,
+            month: newMonth,
+        });
+        
+        if (searchHistory.length > MAX_NUM_SEARCH_HISTORY)
+            searchHistory.pop();
+    }
+
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+    loadSearchHistory();
+}
+
+
+// Load search history on page
+function loadSearchHistory(){
+    $('#birthday-history-list').empty();
+    searchHistory.forEach(item => 
+        $('#birthday-history-list').append(
+            `<li class="collection-item no-padding">
+                <button data-day=${item.day} data-month=${item.month} class="birthday-btn btn waves-effect waves-light brown lighten-1">${item.month} ${item.day}</button>
+            </li>`
+        )
+    );
 }
 
 
