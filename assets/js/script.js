@@ -51,8 +51,6 @@ function setNumDays(month){
 
 // Get horoscope based on sign name
 function getHoroscope(month, day){
-    month = "November";
-    day = "12";
     var signName = getSignName(month, day);
 
     fetch('https://sameer-kumar-aztro-v1.p.rapidapi.com/?sign=' + signName + '&day=today',
@@ -109,6 +107,7 @@ function extractFromText(horoscopeObj, extractType) {
     .then((response) => response.json())
     .then((data) => {
       if(extractType=="topics"){
+       console.log(data);
         var keywords= data.keywords;
         keywords.push(horoscopeObj.color);
         keywords.push(horoscopeObj.luckyNum);
@@ -126,28 +125,55 @@ function extractFromText(horoscopeObj, extractType) {
     .catch((err) => console.error(err));
 }
 
-const encodedParams = new URLSearchParams();
-encodedParams.append("q", keywords);
-encodedParams.append("accessToken", "ef149044f1msh6c4ae87fc053ebbp1a9994jsnaeca69b4627c");
+//call keyword API
+extractFromText(horoscopeObj, extractType);
 
-const options = {
-	method: 'POST',
-	headers: {
-		'content-type': 'application/x-www-form-urlencoded',
-		'X-RapidAPI-Key': '00173b333cmsh7f497d732d65894p1a0c45jsn8fad42dfb52d',
-		'X-RapidAPI-Host': 'Spotifystefan-skliarovV1.p.rapidapi.com'
-	},
-	body: encodedParams
-};
+//return an array from keywords and feelings
+var keywordsArray = Object.getOwnPropertyNames(keywords);
+var feelingsArray = Object.getOwnPropertyNames(feelings);
 
-fetch('https://spotifystefan-skliarovv1.p.rapidapi.com/search', options)
+
+//generate a unique query string to search spotify with 
+var uniqueQueryString;
+for (i=0; i <= keywordsArray.length; i++){
+    uniqueQueryString = "https://spotify-scraper.p.rapidapi.com/v1/search?" + keywordsArray[i] + options;
+    console.log(uniqueQueryString);
+}
+
+//spotify search function 
+function spotifySearch(){
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': '00173b333cmsh7f497d732d65894p1a0c45jsn8fad42dfb52d',
+            'X-RapidAPI-Host': 'spotify-scraper.p.rapidapi.com'
+        }
+    };
+    fetch(uniqueQueryString, options)
 	.then(response => response.json())
 	.then(response => console.log(response))
 	.catch(err => console.error(err));
+    let response.json = spotifySearchResults
+}
+
+// call spotify search function 
+spotifySearch();
+
+// parse json with random function 
+function randomizeSpotifyResults(){
+    return spotifySearchResults[parseInt(Math.random()*playlist.items)];
+    console.log("shareUrL" + "description");
+
+}
 
 
+// append results to DOM
+document.createElement();
+
+
+
+// 
 //LISTENERS
-
 //Update # of days when month is (re-)selected
 monthSelectorEl.on('change', function(event){
     event.preventDefault();
