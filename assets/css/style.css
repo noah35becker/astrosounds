@@ -105,8 +105,21 @@
     
 
     /* Sign */
-    #sign h5, #sign h6 span{
-        font-weight: bolder;
-    }
+        #sign h5, #sign h6 span{
+            font-weight: bolder;
+        }
+
+        #sign-image{
+            font-family: monospace;
+            letter-spacing: .8px;
+            font-size: 2.3px;
+            font-weight: bold;
+        }
+
+    
+    /* Playlist */
+        .playlist-item h5{
+            font-weight: bold;
+        }
 
     
