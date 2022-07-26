@@ -1,21 +1,68 @@
-.birthday-btn{
-    width: 100%;
-    padding-right:0px !important;
-    padding-left:0px !important;
 
-}
+/* UTILITY CLASSES */
+    .no-margin{
+        margin: 0;
+    }
 
-.collection-item,.collection {    margin-top: 10px !important;
-    border: none !important;}
 
-.no-margin {
-    margin: 0;
-}
 
-img {
-    max-width: 75% !important;
-}
+/* GENERAL RULES */
+    body{
+        min-height: 100vh;
+        background-color: rgb(184, 222, 255); /* fallback */
+        background-image: linear-gradient(to bottom right, rgb(27, 217, 255), rgb(248, 251, 171));
+        background-repeat: no-repeat;
+        font-family: 'Ubuntu', sans-serif;
+        font-weight: 400;
+    }
 
-.logo{
-    max-width: 30px!important;
-}
+    img {
+        max-width: 75% !important;
+    }
+
+    h5{
+        font-size: 1.5rem;
+        line-height: 120%;
+    }
+
+    .btn{
+        height: auto;
+        line-height: 1.5;
+        padding: 10px 15px;
+        vertical-align: middle;
+    }
+    
+    
+
+/* USER INPUT / SEARCH HISTORY */
+    .collection, .collection-item{
+        margin-top: 10px !important;
+        border: none !important;
+    }
+
+    .search-btn{
+        line-height: 28px;
+        margin-top: 15px;
+    }
+
+    #birthday-input{
+        margin-bottom: 40px;
+    }
+
+    #birthday-input input{
+        border-bottom-color: rgb(87, 87, 87);
+    }
+
+    #birthday-history, .birthday-btn{
+        font-style: italic;
+    }
+
+    .birthday-btn{
+        width: 100%;
+        transition: opacity .4s;
+    }
+    .birthday-btn:hover{
+        opacity: .7;
+    }
+
+    
