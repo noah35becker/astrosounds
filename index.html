@@ -1,37 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
-    <link rel="stylesheet" href="./assets/css/style.css"/>
-    <title>Document</title>
-</head>
-<body>
-    <form id="birthday-input">
-        <label>When's your birthday?</label>
-        <select name="month" form="birthday-input" required autofocus>
-            <option value="january">January</option>
-            <option value="february">February</option>
-            <option value="march">March</option>
-            <option value="april">April</option>
-            <option value="may">May</option>
-            <option value="june">June</option>
-            <option value="july">July</option>
-            <option value="august">August</option>
-            <option value="september">September</option>
-            <option value="october">October</option>
-            <option value="november">November</option>
-            <option value="december">December</option>
-        </select>
-        <select name="day" form="birthday-input" required></select>
-        <button type="submit">Get it</button>
-    </form>
 
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap">
+    <link rel="stylesheet"href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="./assets/css/style.css" />
+
+    <title>Astrosounds</title>
+</head>
+
+<body>
+    <!-- header -->
+    <header>
+        <h1 class="center-align deep-orange-text text-darken-4">Astrosounds</h1>
+    </header>
+
+    <!-- container for body excl header & footer -->
+    <div class="container row">
+        <h4 id="description" class="col s12 center-align">Spotify playlists based on today's horoscope</h4>
+        
+        <!-- input form & history -->
+        <div id="user-input" class="col s12 m3 l3">
+            <h5 class="align-center">When's your birthday?</h5>
+            <form id="birthday-input" class="center-align">
+                <select class="col s8 m8 l8 " name="month" form="birthday-input" class="input-field" required autofocus>
+                    <option value="january">January</option>
+                    <option value="february">February</option>
+                    <option value="march">March</option>
+                    <option value="april">April</option>
+                    <option value="may">May</option>
+                    <option value="june">June</option>
+                    <option value="july">July</option>
+                    <option value="august">August</option>
+                    <option value="september">September</option>
+                    <option value="october">October</option>
+                    <option value="november">November</option>
+                    <option value="december">December</option>
+                </select>
+                <select class="col s4 m4 l4 " name="day" form="birthday-input" required></select>
+                <button class="btn search-btn waves-effect waves-light" type="submit">Get sounds&nbsp;&nbsp;&nbsp;<i class="material-icons">send</i></button>
+            </form>
+
+            <div id="birthday-history">
+                <h5 id="birthday-history-header" class="center-align">Previously searched:</h5>
+                <ul id="birthday-history-list" class="collection">
+                    <li class="collection-item no-padding"><button data-month="September" data-day="24" class="birthday-btn btn waves-effect waves-light brown lighten-1" >September 24</button></li>
+                    <li class="collection-item no-padding"><button  data-month="April" data-day="24" class="birthday-btn btn waves-effect waves-light brown lighten-1">April 24</button></li>
+                </ul>
+            </div>
+        </div>
+
+        <main id="results-wrapper" class="row col s12 m9 l9">
+            <div id="results-header">
+                <h5 id="todays-date" class="center-align">Today's date:&nbsp;<span class="pink lighten-3">July 26</span></h5>
+                <h5 id="searched-birthday" class="center-align">Your birthday:&nbsp;<span class="pink lighten-3">September 24</span></h5>
+            </div>
+            <div id="results">
+                <div id="sign" class="col s12 m4 l4 center-align">
+                    <img class="responsive-img" src="./assets/images/signs/libra.png"/>
+                    <h5>Libra</h5>
+                    <h6 id="lucky-number">Lucky Number:&nbsp;<span>38</span></h6>
+                    <h6 id="mood">Mood:&nbsp;<span>Mellow</span></h6>
+                    <h6 id="color">Color:&nbsp;<span>Green</span></h6>
+                </div>
+
+                <div id="music">
+                    <h5 class="center-align">Playlists for your Horoscope</h5>
+                    <ul id="playlists" class="col s12 m8 l8">
+                        <li class="playlist-item">
+                            <a href="https://www.123.com" class="row valign-wrapper">
+                                <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
+                                <h5 class="col s10 no-margin teal-text text-darken-2">
+                                    Playlist Name
+                                </h5>
+                            </a>
+                        </li>
+                        <li class="playlist-item">
+                            <a href="https://www.123.com" class="row valign-wrapper">
+                                <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
+                                <h5 class="col s10 no-margin teal-text text-darken-2">
+                                    Playlist Name
+                                </h5>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer>
+
+    </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@2.4.0/build/global/luxon.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> <!-- REMOVE THIS LATER if we don't end up using any of Materialize's JS functions -->
     <script src="./assets/js/script.js"></script>
 </body>
+
 </html>
