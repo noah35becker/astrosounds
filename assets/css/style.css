@@ -13,7 +13,6 @@
         background-image: linear-gradient(to bottom right, rgb(27, 217, 255), rgb(248, 251, 171));
         background-repeat: no-repeat;
         font-family: 'Ubuntu', sans-serif;
-        font-weight: 400;
         margin: 0;
         display: flex;
         flex-direction: column;
@@ -45,14 +44,16 @@
     
   
     
-/*DESCRIPTION*/
+/*Description*/
     #description{
         font-style: italic;
         margin-bottom: 35px;
         font-size: 2rem;
     }
 
-/* USER INPUT / SEARCH HISTORY */
+
+
+/* User input / search history */
     .collection, .collection-item{
         margin-top: 10px !important;
         border: none !important;
@@ -81,6 +82,31 @@
     }
     .birthday-btn:hover{
         opacity: .7;
+    }
+
+
+
+/* Results */
+    /* Header */
+        #results-header{
+            margin-bottom: 35px;
+        }
+
+        #results-header h5{
+            font-size: 1.8rem;
+        }
+
+        #results-header h5 span{
+            padding: 5px 10px;
+            white-space: nowrap;
+            border-radius: 20px;
+            font-size: 1.6rem;
+        }
+    
+
+    /* Sign */
+    #sign h5, #sign h6 span{
+        font-weight: bolder;
     }
 
     
