@@ -78,7 +78,10 @@ function getHoroscope(month, day){
         })
         .catch(error =>
             console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
-        );
+        )
+    ;
+
+    saveSearchHistory(month, day);
 }
 
 
@@ -129,11 +132,11 @@ function extractFromText(horoscopeObj, extractType) {
 
 
 //Save searched birthday history to localStorage
-function saveSearchHistory(newDay, newMonth){
+function saveSearchHistory(newMonth, newDay){
     var trulyNewItem = true;
     
     for (i = 0; i < searchHistory.length; i++)
-        if (newDay === searchHistory[i].day && newMonth === searchHistory[i].month){
+        if (newMonth === searchHistory[i].month && newDay === searchHistory[i].day){
             trulyNewItem = false;
             searchHistory.unshift(searchHistory.splice(i, 1)[0]);
             break;
@@ -141,8 +144,8 @@ function saveSearchHistory(newDay, newMonth){
     
     if (trulyNewItem){
         searchHistory.unshift({
-            day: newDay,
             month: newMonth,
+            day: newDay
         });
         
         if (searchHistory.length > MAX_NUM_SEARCH_HISTORY)
@@ -160,7 +163,7 @@ function loadSearchHistory(){
     searchHistory.forEach(item => 
         $('#birthday-history-list').append(
             `<li class="collection-item no-padding">
-                <button data-day=${item.day} data-month=${item.month} class="birthday-btn btn waves-effect waves-light brown lighten-1">${item.month} ${item.day}</button>
+                <button data-month=${item.month} data-day=${item.day} class="birthday-btn btn waves-effect waves-light brown lighten-1">${item.month} ${item.day}</button>
             </li>`
         )
     );
@@ -183,12 +186,20 @@ $('#birthday-input').on('submit', function(event){
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
 
-// required to load selects using materialize
+
+//Required to load 'select' elements using Materialize
 $(document).ready(function(){
     $('select').formSelect();
   });
+
+
+
+
+
 
 //INITIALIZE PAGE
 monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
 monthSelectorEl.trigger('change'); // initialize day dropdown w/ correct # of days for the initial month
 daySelectorEl.val(+DateTime.now().toFormat('d')); // set initial day-of-month to today's
+
+loadSearchHistory();
