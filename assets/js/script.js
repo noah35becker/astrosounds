@@ -73,7 +73,7 @@ function getHoroscope(month, day){
                 luckyNum: data.lucky_number,
                 mood: data.mood
             };
-            extractFromText(horoscopeObj, "topics");
+            extractFromText(horoscopeObj);
         })
         .catch(error =>
             console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
@@ -96,28 +96,21 @@ function getSignName(month, day){
 
 // Break down text from horoscope into keywords
 function extractFromText(horoscopeObj) {
-  const options = {
+    const options = {
     method: "POST",
     headers: {
-      "content-type": "application/json",
-      "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
-      "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
+        "content-type": "application/json",
+        "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
+        "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
     },
     body: '{"text":"' + horoscopeObj.desc + '"}',
-  };
+    };
 
-  fetch("https://textprobe.p.rapidapi.com/topics", options)
-    .then(response => response.json())
-    .then(data => {    
-        var keywords = data.keywords;
-        console.log(keywords);
-            keywords.push(horoscopeObj.color);
-            keywords.push(horoscopeObj.luckyNum);
-            keywords.push(horoscopeObj.mood);
-        
-        spotifySearch(keywords);
-    })
-    .catch((err) => console.error(err));
+    fetch("https://textprobe.p.rapidapi.com/topics", options)
+        .then(response => response.json())
+        .then(data => spotifySearch(data.keywords))
+        .catch(err => console.error(err)
+    );
 }
 
 
