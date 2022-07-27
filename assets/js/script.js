@@ -28,6 +28,9 @@ const SIGNS = [
 const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
 
+var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+const MAX_NUM_SEARCH_HISTORY = 4;
+
 const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
 const NUM_SPOTIFY_PLAYLISTS = 1;
 const PLAYLIST_OPTIONS_PER_KEYWORD = 5;
@@ -103,6 +106,8 @@ function setNumDays(month){
 
     if (daySelected <= daysInMonth)
         daySelectorEl.val(daySelected);
+    
+    materializeRefreshSelect();
 }
 
 
@@ -131,6 +136,8 @@ function getHoroscope(month, day){
         })
         .catch(err => console.error(err)) //UPDATE LATER with something that the user can actually see (a modal?)
     ;
+
+    saveSearchHistory(month, day);
 }
 
 
@@ -224,6 +231,45 @@ function createSpotifyLink(playlistOptions){
 }
 
 
+//Save searched birthday history to localStorage
+function saveSearchHistory(newMonth, newDay){
+    var trulyNewItem = true;
+    
+    for (i = 0; i < searchHistory.length; i++)
+        if (newMonth === searchHistory[i].month && newDay === searchHistory[i].day){
+            trulyNewItem = false;
+            searchHistory.unshift(searchHistory.splice(i, 1)[0]);
+            break;
+        }
+    
+    if (trulyNewItem){
+        searchHistory.unshift({
+            month: newMonth,
+            day: newDay
+        });
+        
+        if (searchHistory.length > MAX_NUM_SEARCH_HISTORY)
+            searchHistory.pop();
+    }
+
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+    loadSearchHistory();
+}
+
+
+// Load search history on page
+function loadSearchHistory(){
+    $('#birthday-history-list').empty();
+    searchHistory.forEach(item => 
+        $('#birthday-history-list').append(
+            `<li class="collection-item no-padding">
+                <button data-month=${item.month} data-day=${item.day} class="birthday-btn btn waves-effect waves-light brown lighten-1">${item.month} ${item.day}</button>
+            </li>`
+        )
+    );
+}
+
+
 
 //LISTENERS
 
@@ -252,10 +298,23 @@ $('#birthday-input').on('submit', function(event){
 });
 
 
-// required to load selects using materialize
-$(document).ready(function(){
-    $('select').formSelect();
-});
+
+//Upon clicking a search history button, submit that birthday again
+$('#birthday-history-list').on('click', '.birthday-btn', function(){
+    monthSelectorEl.val($(this).attr('data-month'));
+    daySelectorEl.val($(this).attr('data-day'));
+    
+    monthSelectorEl.trigger('change');
+    $('#birthday-input').trigger('submit');
+})
+
+
+//Required to load 'select' elements using Materialize
+function materializeRefreshSelect(){
+    $(document).ready(function(){
+        $('select').formSelect();
+    });
+}
 
 
 
@@ -263,3 +322,7 @@ $(document).ready(function(){
 monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
 monthSelectorEl.trigger('change'); // initialize day dropdown w/ correct # of days for the initial month
 daySelectorEl.val(+DateTime.now().toFormat('d')); // set initial day-of-month to today's
+materializeRefreshSelect();
+
+loadSearchHistory();
+
