@@ -148,6 +148,7 @@ monthSelectorEl.on('change', function(event){
 //Upon birthday submission, begin the chain of API calls
 $('#birthday-input').on('submit', function(event){
     event.preventDefault();
+    $('#results-wrapper').attr('style', 'display: block');
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
 
