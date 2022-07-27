@@ -189,6 +189,16 @@ $('#birthday-input').on('submit', function(event){
 });
 
 
+//Upon clicking a search history button, submit that birthday again
+$('#birthday-history-list').on('click', '.birthday-btn', function(){
+    monthSelectorEl.val($(this).attr('data-month'));
+    daySelectorEl.val($(this).attr('data-day'));
+    
+    monthSelectorEl.trigger('change');
+    $('#birthday-input').trigger('submit');
+})
+
+
 //Required to load 'select' elements using Materialize
 function materializeRefreshSelect(){
     $(document).ready(function(){
