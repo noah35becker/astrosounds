@@ -125,6 +125,10 @@ function extractFromText(horoscopeObj, extractType) {
 }
 
 
+function footerYr(){
+    $('footer h6 span.yr').text(DateTime.now().toFormat('y'));
+}
+
 
 //LISTENERS
 
@@ -150,3 +154,5 @@ $(document).ready(function(){
 monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
 monthSelectorEl.trigger('change'); // initialize day dropdown w/ correct # of days for the initial month
 daySelectorEl.val(+DateTime.now().toFormat('d')); // set initial day-of-month to today's
+
+footerYr();
