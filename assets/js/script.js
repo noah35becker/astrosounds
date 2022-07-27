@@ -74,7 +74,7 @@ function getHoroscope(month, day){
 
             $('#sign-wrapper img')
                 .attr('src', `./assets/images/signs/${signName}.png`)
-                .attr('alt', signName + ' symbol');
+                .attr('alt', titleCaseSignName(signName) + ' symbol');
             $('#sign-wrapper h5').text(signName);
             $('#sign-wrapper #lucky-number span').text(horoscopeObj.luckyNum);
             $('#sign-wrapper #mood span').text(horoscopeObj.mood);
@@ -98,6 +98,14 @@ function getSignName(month, day){
         return sign.name;
     else
         return 'capricorn';
+}
+
+
+// Change sign name to Title Case (for sign image's alt attribute)
+function titleCaseSignName(signName){
+    chars = signName.split('');
+    chars[0] = chars[0].toUpperCase();
+    return chars.join('');
 }
 
 
