@@ -137,6 +137,11 @@
     /* Playlist */
         .playlist-item h5{
             font-weight: bold;
+            opacity: 1;
+            transition: opacity .3s;
+        }
+        .playlist-item h5:hover{
+            opacity: .7;
         }
         
 
