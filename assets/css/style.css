@@ -117,9 +117,28 @@
         }
 
     
-    /* Playlist */
+    /* Playlists */
         .playlist-item h5{
             font-weight: bold;
         }
 
-    
+        .playlist-item img{
+            padding-right: 0 !important;
+        }
+
+        #try-again{
+            line-height: 130%;
+            font-style: italic;
+        }
+
+        #try-again a{
+            font-weight: bolder;
+            font-style: normal;
+            cursor: pointer;
+            text-decoration: underline;
+            opacity: 1;
+            transition: opacity .3s;
+        }
+        #try-again a:hover{
+            opacity: .7;
+        }
