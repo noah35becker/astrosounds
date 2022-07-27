@@ -122,6 +122,10 @@
             font-weight: bold;
         }
 
+        .playlist-item img{
+            padding-right: 0 !important;
+        }
+
         #try-again{
             line-height: 130%;
             font-style: italic;
