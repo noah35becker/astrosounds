@@ -112,6 +112,14 @@ function setNumDays(month){
 }
 
 
+// Return a given word in Title Case
+function wordToTitleCase(word){
+    chars = word.split('');
+    chars[0] = chars[0].toUpperCase();
+    return chars.join('');
+}
+
+
 // Get horoscope based on sign name
 function getHoroscope(month, day){
     var signName = getSignName(month, day);
@@ -134,7 +142,7 @@ function getHoroscope(month, day){
 
             $('#sign-wrapper img')
                 .attr('src', `./assets/images/signs/${signName}.png`)
-                .attr('alt', titleCaseSignName(signName) + ' symbol');
+                .attr('alt', wordToTitleCase(signName) + ' symbol');
             $('#sign-wrapper h5').text(signName);
             $('#sign-wrapper #lucky-number span').text(horoscopeObj.luckyNum);
             $('#sign-wrapper #mood span').text(horoscopeObj.mood);
@@ -159,14 +167,6 @@ function getSignName(month, day){
         return sign.name;
     else
         return 'capricorn';
-}
-
-
-// Change sign name to Title Case (for sign image's alt attribute)
-function titleCaseSignName(signName){
-    chars = signName.split('');
-    chars[0] = chars[0].toUpperCase();
-    return chars.join('');
 }
 
 
@@ -286,7 +286,7 @@ function loadSearchHistory(){
 }
 
 
-// Set year of copyright footer
+// Set year of copyright in footer
 function footerYr(){
     $('footer h6 span.yr').text(DateTime.now().toFormat('y'));
 }
@@ -302,7 +302,7 @@ function errorMsg(){
             `<h5 id="error-msg" class="red-text text-darken-4 center-align">
                 System error
                 <br/>
-                The page will refresh in <span>${secsTillRefresh} seconds</span>
+                The page will refresh in <span>${secsTillRefresh} second${secsTillRefresh > 1 ? 's' : ''}</span>
             </h5>`
         ))
     ;
@@ -338,12 +338,19 @@ monthSelectorEl.on('change', function(event){
 $('#birthday-input').on('submit', function(event){
     event.preventDefault();
 
-    $('#results-wrapper').attr('style', 'display: block');
-        $('#try-again').attr('style', 'display: none');
-        $('#playlists').empty();
-        $('#loading-graphic').append(loadingGraphic);
+    var submittedMonth = monthSelectorEl.val();
+    var submittedDay = daySelectorEl.val();
 
-    getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
+    $('#todays-date span').text(DateTime.now().toFormat('MMMM d'));
+    $('#searched-birthday span').text(`${wordToTitleCase(submittedMonth)} ${submittedDay}`);
+    $('#try-again').attr('style', 'display: none');
+    $('#playlists').empty();
+    $('#loading-graphic').append(loadingGraphic);
+
+
+    $('#results-wrapper').attr('style', 'display: block');
+
+    getHoroscope(submittedMonth, submittedDay);
 });
 
 
