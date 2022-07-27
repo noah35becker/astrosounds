@@ -30,9 +30,9 @@ const daySelectorEl = $('select[name="day"]');
 
 const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
 const NUM_SPOTIFY_PLAYLISTS = 1;
-const PLAYLIST_OPTIONS_MULTIPLIER = 5;
+const PLAYLIST_OPTIONS_PER_KEYWORD = 5;
 
-const basicLoader = $(
+const loadingGraphic = $(
 `<div class="preloader-wrapper big active">
     <div class="spinner-layer spinner-blue">
         <div class="circle-clipper left">
@@ -108,8 +108,6 @@ function setNumDays(month){
 
 // Get horoscope based on sign name
 function getHoroscope(month, day){
-    $('body').append(basicLoader);
-    
     var signName = getSignName(month, day);
 
     fetch('https://sameer-kumar-aztro-v1.p.rapidapi.com/?sign=' + signName + '&day=today',
@@ -131,9 +129,8 @@ function getHoroscope(month, day){
             };
             extractFromText(horoscopeObj);
         })
-        .catch(error =>
-            console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
-        );
+        .catch(err => console.error(err)) //UPDATE LATER with something that the user can actually see (a modal?)
+    ;
 }
 
 
@@ -165,7 +162,7 @@ function extractFromText(horoscopeObj) {
     fetch("https://textprobe.p.rapidapi.com/topics", options)
         .then(response => response.json())
         .then(data => spotifySearch(data.keywords))
-        .catch(err => console.error(err)
+        .catch(err => console.error(err) //UPDATE LATER with something that the user can actually see (a modal?)
     );
 }
 
@@ -181,21 +178,26 @@ function spotifySearch(keywords){
     };
 
     var randomKeywords = randKeywords(keywords);
-    console.log(randomKeywords);
 
-    var apiCallBuffer = 0;
-
-    randomKeywords.forEach(term => {
-
+    var apiCallBuffer = SPOTIFY_API_CALL_BUFFER; //initialize to this val (rather than having the first API call run immed.) in case user clicks "Get Sounds" repeatedly in quick succession
+    randomKeywords.forEach((term, index) => {
         setTimeout(() => {
-            console.log(term);
-            fetch("https://spotify-scraper.p.rapidapi.com/v1/search?term=" + term, options)
+            fetch(`https://spotify-scraper.p.rapidapi.com/v1/search?term=${term}`, options)
                 .then(response => response.json())
-                .then(data => {console.log(data); createSpotifyLink(data.playlists.items.slice(0, NUM_SPOTIFY_PLAYLISTS * PLAYLIST_OPTIONS_MULTIPLIER));})
-                .catch(err => console.error(err))
+                .then(data => {                    
+                    if (index === randomKeywords.length - 1){ // after the final Spotify API call, remove the loading graphic and show #try-again
+                        $('#loading-graphic').empty();
+                        $('#try-again').attr('style', 'display: block');
+                    }
+
+                    createSpotifyLink(data.playlists.items.slice(0, PLAYLIST_OPTIONS_PER_KEYWORD));
+                })
+                .catch(err => console.error(err)) //UPDATE LATER with something that the user can actually see (a modal?)
         }, apiCallBuffer);
+
         apiCallBuffer += SPOTIFY_API_CALL_BUFFER;
     });
+    
 }
 
 
@@ -208,14 +210,14 @@ function randKeywords(keywords) {
 }
 
 
-function createSpotifyLink(playlists){
-    var thisPlaylist = playlists.splice(Math.floor(Math.random() * playlists.length), 1)[0];
+function createSpotifyLink(playlistOptions){
+    var chosenPlaylist = playlistOptions[Math.floor(Math.random() * playlistOptions.length)];
     
     $('#playlists').append($(
         `<li class="playlist-item">
-                <a href="${thisPlaylist.shareUrl}" class="row valign-wrapper" target="_blank">
-                <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
-                <h5 class="col s10 no-margin teal-text text-darken-2">${thisPlaylist.name}</h5>
+                <a href="${chosenPlaylist.shareUrl}" class="row valign-wrapper" target="_blank">
+                <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="Spotify logo"/>
+                <h5 class="col s10 no-margin teal-text text-darken-2">${chosenPlaylist.name}</h5>
             </a>
         </li>`
     ));
@@ -242,7 +244,9 @@ monthSelectorEl.on('change', function(event){
 $('#birthday-input').on('submit', function(event){
     event.preventDefault();
 
+    $('#try-again').attr('style', 'display: none');
     $('#playlists').empty();
+    $('#loading-graphic').append(loadingGraphic);
 
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
