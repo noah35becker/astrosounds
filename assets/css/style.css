@@ -56,6 +56,7 @@
         font-family: 'Merriweather', 'Times New Roman', Times, serif;
         font-weight: 400;
         text-shadow: 2px 4px 8px white;
+        margin-top: 2.4rem;
         margin-bottom: 0;
     }
 
@@ -63,7 +64,8 @@
 /* Description */
     #description{
         font-style: italic;
-        margin-bottom: 55px;
+        margin-top: 1.3rem;
+        margin-bottom: 35px;
         font-size: 2rem;
         text-shadow: 2px 4px 8px white;
     }
@@ -91,6 +93,15 @@
 
     #birthday-history, .birthday-btn{
         font-style: italic;
+    }
+
+    #birthday-history-header{
+        margin-bottom: 0;
+        font-size: 1.4rem;
+    }
+
+    #birthday-history-list{
+        margin-top: 0;
     }
 
     .birthday-btn{
@@ -167,6 +178,12 @@
         }
         #try-again a:hover{
             opacity: .7;
+        }
+
+
+    /* Error msg */
+        #error-msg{
+            font-style: italic;
         }
         
 
