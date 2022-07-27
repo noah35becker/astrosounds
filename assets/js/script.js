@@ -302,16 +302,18 @@ function errorMsg(){
             `<h5 id="error-msg" class="red-text text-darken-4 center-align">
                 System error
                 <br/>
-                The page will refresh in <span>${secsTillRefresh}</span> seconds
+                The page will refresh in <span>${secsTillRefresh} seconds</span>
             </h5>`
         ))
     ;
     
     setInterval(() => {
-        $('#error-msg span').text(--secsTillRefresh);
-        
+        secsTillRefresh--;
+
         if (secsTillRefresh === 0)
             window.location.reload();
+        else
+            $('#error-msg span').text(`${secsTillRefresh} second${secsTillRefresh > 1 ? 's' : ''}`);
     }, 1000);
 }
 
