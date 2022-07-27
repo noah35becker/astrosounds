@@ -134,7 +134,7 @@
         }
 
     
-    /* Playlist */
+    /* Playlists */
         .playlist-item h5{
             font-weight: bold;
             opacity: 1;
@@ -144,12 +144,34 @@
             opacity: .7;
         }
         
+        .playlist-item img{
+            padding-right: 0 !important;
+        }
+
+        #try-again{
+            line-height: 130%;
+            font-style: italic;
+        }
+
+        #try-again a{
+            font-weight: bolder;
+            font-style: normal;
+            cursor: pointer;
+            text-decoration: underline;
+            opacity: 1;
+            transition: opacity .3s;
+        }
+        #try-again a:hover{
+            opacity: .7;
+        }
+        
 
 
 /* Footer */
     footer{
         margin-bottom: 15px;
     }
+
 
     footer h6{
         font-size: 1.05rem;
@@ -171,4 +193,3 @@
     footer h6 span.left-border{
         border-left: 1px solid black;
     }
-    
