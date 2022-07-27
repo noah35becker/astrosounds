@@ -78,7 +78,6 @@ function getHoroscope(month, day){
         );
 }
 
-
 // Get sign name based on month and day
 function getSignName(month, day){
     var dayOfYr = +DateTime.fromFormat(`${month} ${day} ${DUMMY_LEAP_YR}`, 'MMMM d y').toFormat('o');
@@ -113,35 +112,34 @@ function extractFromText(horoscopeObj, extractType) {
         keywords.push(horoscopeObj.luckyNum);
         keywords.push(horoscopeObj.mood);
         console.log(keywords);
-        return keywords;
+        spotifySearch(keywords);
       }
-      else if (extractType=="feelings"){
-        var feelings = [data.emotion_prediction];
-        feelings.push(horoscopeObj.mood);
-        console.log(feelings);
-        return feelings;
-      }
+
     })
     .catch((err) => console.error(err));
 }
 
-//call keyword API
-extractFromText(horoscopeObj, extractType);
-
-//return an array from keywords and feelings
-var keywordsArray = Object.getOwnPropertyNames(keywords);
-var feelingsArray = Object.getOwnPropertyNames(feelings);
 
 
-//generate a unique query string to search spotify with 
-var uniqueQueryString;
-for (i=0; i <= keywordsArray.length; i++){
-    uniqueQueryString = "https://spotify-scraper.p.rapidapi.com/v1/search?" + keywordsArray[i] + options;
-    console.log(uniqueQueryString);
+
+
+
+// get three random keywords from keywordsArray
+
+//return as single string 
+
+function uniqueQueryString(keywords) {
+    //generate a unique query string to search spotify with 
+    var uniqueQueryString = "";
+    for (i=0; i <= keywords.length && i<1; i++){
+    // randomize 
+        uniqueQueryString = uniqueQueryString + " " + keywords[i];
+}
+return uniqueQueryString;
 }
 
 //spotify search function 
-function spotifySearch(){
+function spotifySearch(keywords){
     const options = {
         method: 'GET',
         headers: {
@@ -149,31 +147,35 @@ function spotifySearch(){
             'X-RapidAPI-Host': 'spotify-scraper.p.rapidapi.com'
         }
     };
-    fetch(uniqueQueryString, options)
+    fetch("https://spotify-scraper.p.rapidapi.com/v1/search?term=" + uniqueQueryString(keywords), options)
 	.then(response => response.json())
-	.then(response => console.log(response))
+	.then(data => createSptfyBtn(data.playlists.items.slice(0,3)))
 	.catch(err => console.error(err));
-}
-
-var jsonResponse;
-
-// call spotify search function 
-spotifySearch();
-
-// parse json with random function 
-function randomizeSpotifyResults(){
-    return spotifySearchResults[parseInt(Math.random()*playlist.items)];
-    console.log("shareUrL" + "description");
-
-}
+    
+    }
 
 
-// append results to DOM
-document.createElement();
+    function createSptfyBtn(playlistsArray){
+        for(i=0; i<3; i++){
+       $('#playlists').append($(
+           `<li class="playlist-item">
+                 <a href="${playlistsArray[i].shareUrl}" class="row valign-wrapper">
+                    <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
+                    <h5 class="col s10 no-margin teal-text text-darken-2">${playlistsArray[i].name}</h5>
+                </a>
+            </li>`))
+    }
+    }
 
 
 
-// 
+// generate one string concatenating three keywords 
+// call spotify Search
+
+
+
+
+
 //LISTENERS
 //Update # of days when month is (re-)selected
 monthSelectorEl.on('change', function(event){
@@ -199,6 +201,11 @@ daySelectorEl.val(+DateTime.now().toFormat('d')); // set initial day-of-month to
 
   // search spotify with keywords from generator 
  
+
+  // required to load selects using materialize
+$(document).ready(function(){
+    $('select').formSelect();
+  });
 
 
 

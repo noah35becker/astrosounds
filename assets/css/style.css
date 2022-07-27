@@ -1,0 +1,122 @@
+/* UTILITY CLASSES */
+    .no-margin{
+        margin: 0;
+    }
+
+
+
+/* GENERAL RULES */
+    body{
+        min-height: 100vh;
+        background-color: rgb(184, 222, 255); /* fallback */
+        background-image: linear-gradient(to bottom right, rgb(27, 217, 255), rgb(248, 251, 171));
+        background-repeat: no-repeat;
+        font-family: 'Ubuntu', sans-serif;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    p{
+        margin: 0;
+    }
+
+    .container.row{
+        margin-bottom: 0px;
+    }
+
+    img {
+        max-width: 75% !important;
+    }
+
+    h5{
+        font-size: 1.5rem;
+        line-height: 120%;
+    }
+
+    .btn{
+        height: auto;
+        line-height: 1.5;
+        padding: 10px 15px;
+        vertical-align: middle;
+    }
+    
+  
+    
+/*Description*/
+    #description{
+        font-style: italic;
+        margin-bottom: 35px;
+        font-size: 2rem;
+    }
+
+
+
+/* User input / search history */
+    .collection, .collection-item{
+        margin-top: 10px !important;
+        border: none !important;
+    }
+
+    .search-btn{
+        line-height: 28px;
+        margin-top: 15px;
+    }
+
+    #birthday-input{
+        margin-bottom: 40px;
+    }
+
+    #birthday-input input{
+        border-bottom-color: rgb(87, 87, 87);
+    }
+
+    #birthday-history, .birthday-btn{
+        font-style: italic;
+    }
+
+    .birthday-btn{
+        width: 100%;
+        transition: opacity .4s;
+    }
+    .birthday-btn:hover{
+        opacity: .7;
+    }
+
+
+
+/* Results */
+    /* Header */
+        #results-header{
+            margin-bottom: 35px;
+        }
+
+        #results-header h5{
+            font-size: 1.8rem;
+        }
+
+        #results-header h5 span{
+            padding: 5px 10px;
+            white-space: nowrap;
+            border-radius: 20px;
+            font-size: 1.6rem;
+        }
+    
+
+    /* Sign */
+        #sign h5, #sign h6 span{
+            font-weight: bolder;
+        }
+
+        #sign-image{
+            font-family: monospace;
+            letter-spacing: .8px;
+            font-size: 2.3px;
+            font-weight: bold;
+        }
+
+    
+    /* Playlist */
+        .playlist-item h5{
+            font-weight: bold;
+        }
