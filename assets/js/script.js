@@ -28,6 +28,10 @@ const SIGNS = [
 const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
 
+const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
+const NUM_SPOTIFY_PLAYLISTS = 1;
+const PLAYLIST_OPTIONS_MULTIPLIER = 5;
+
 
 
 //FUNCTIONS
@@ -70,8 +74,7 @@ function getHoroscope(month, day){
                 luckyNum: data.lucky_number,
                 mood: data.mood
             };
-            extractFromText(horoscopeObj,"topics");
-//             extractFromText(horoscopeObj,"feelings");
+            extractFromText(horoscopeObj);
         })
         .catch(error =>
             console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
@@ -91,42 +94,87 @@ function getSignName(month, day){
         return 'capricorn';
 }
 
-// Get key feelings or topics given text input, extractType options = ["topics","feelings"]
-function extractFromText(horoscopeObj, extractType) {
-  const options = {
+
+// Break down text from horoscope into keywords
+function extractFromText(horoscopeObj) {
+    const options = {
     method: "POST",
     headers: {
-      "content-type": "application/json",
-      "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
-      "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
+        "content-type": "application/json",
+        "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
+        "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
     },
     body: '{"text":"' + horoscopeObj.desc + '"}',
-  };
+    };
 
-  fetch("https://textprobe.p.rapidapi.com/" + extractType, options)
-    .then((response) => response.json())
-    .then((data) => {
-      if(extractType=="topics"){
-        var keywords= data.keywords;
-        keywords.push(horoscopeObj.color);
-        keywords.push(horoscopeObj.luckyNum);
-        keywords.push(horoscopeObj.mood);
-        console.log(keywords);
-        return keywords;
-      }
-      else if (extractType=="feelings"){
-        var feelings = [data.emotion_prediction];
-        feelings.push(horoscopeObj.mood);
-        console.log(feelings);
-        return feelings;
-      }
-    })
-    .catch((err) => console.error(err));
+    fetch("https://textprobe.p.rapidapi.com/topics", options)
+        .then(response => response.json())
+        .then(data => spotifySearch(data.keywords))
+        .catch(err => console.error(err)
+    );
+}
+
+
+//spotify search function 
+function spotifySearch(keywords){
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': '00173b333cmsh7f497d732d65894p1a0c45jsn8fad42dfb52d',
+            'X-RapidAPI-Host': 'spotify-scraper.p.rapidapi.com'
+        }
+    };
+
+    var randomKeywords = randKeywords(keywords);
+    console.log(randomKeywords);
+
+    var apiCallBuffer = 0;
+
+    randomKeywords.forEach(term => {
+
+        setTimeout(() => {
+            console.log(term);
+            fetch("https://spotify-scraper.p.rapidapi.com/v1/search?term=" + term, options)
+                .then(response => response.json())
+                .then(data => {console.log(data); createSpotifyLink(data.playlists.items.slice(0, NUM_SPOTIFY_PLAYLISTS * PLAYLIST_OPTIONS_MULTIPLIER));})
+                .catch(err => console.error(err))
+        }, apiCallBuffer);
+        apiCallBuffer += SPOTIFY_API_CALL_BUFFER;
+    });
+}
+
+
+function randKeywords(keywords) {
+    var selectionOfKeywords = [];
+    for (i = 0; i < NUM_SPOTIFY_PLAYLISTS && i < keywords.length; i++)
+        selectionOfKeywords.push(keywords.splice(Math.floor(Math.random() * keywords.length), 1)[0]);
+    
+    return selectionOfKeywords;
+}
+
+
+function createSpotifyLink(playlists){
+    var thisPlaylist = playlists.splice(Math.floor(Math.random() * playlists.length), 1)[0];
+    
+    $('#playlists').append($(
+        `<li class="playlist-item">
+                <a href="${thisPlaylist.shareUrl}" class="row valign-wrapper" target="_blank">
+                <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
+                <h5 class="col s10 no-margin teal-text text-darken-2">${thisPlaylist.name}</h5>
+            </a>
+        </li>`
+    ));
 }
 
 
 
 //LISTENERS
+
+//Clicking 'Get Sounds' inside #try-again is the same as clicking the Get Sounds button
+$('#try-again a').on('click', function(){
+    $('#birthday-input').trigger('submit');
+});
+
 
 //Update # of days when month is (re-)selected
 monthSelectorEl.on('change', function(event){
@@ -138,13 +186,19 @@ monthSelectorEl.on('change', function(event){
 //Upon birthday submission, begin the chain of API calls
 $('#birthday-input').on('submit', function(event){
     event.preventDefault();
+
+    $('#playlists').empty();
+
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
+
 
 // required to load selects using materialize
 $(document).ready(function(){
     $('select').formSelect();
-  });
+});
+
+
 
 //INITIALIZE PAGE
 monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
