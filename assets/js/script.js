@@ -158,7 +158,7 @@ function createSpotifyLink(playlists){
     
     $('#playlists').append($(
         `<li class="playlist-item">
-                <a href="${thisPlaylist.shareUrl}" class="row valign-wrapper">
+                <a href="${thisPlaylist.shareUrl}" class="row valign-wrapper" target="_blank">
                 <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
                 <h5 class="col s10 no-margin teal-text text-darken-2">${thisPlaylist.name}</h5>
             </a>
