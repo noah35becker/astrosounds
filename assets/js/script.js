@@ -28,6 +28,8 @@ const SIGNS = [
 const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
 
+const NUM_SPOTIFY_PLAYLISTS = 3;
+
 
 
 //FUNCTIONS
@@ -70,13 +72,13 @@ function getHoroscope(month, day){
                 luckyNum: data.lucky_number,
                 mood: data.mood
             };
-            extractFromText(horoscopeObj,"topics");
-//             extractFromText(horoscopeObj,"feelings");
+            extractFromText(horoscopeObj, "topics");
         })
         .catch(error =>
             console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
         );
 }
+
 
 // Get sign name based on month and day
 function getSignName(month, day){
@@ -90,8 +92,9 @@ function getSignName(month, day){
         return 'capricorn';
 }
 
-// Get key feelings or topics given text input, extractType options = ["topics","feelings"]
-function extractFromText(horoscopeObj, extractType) {
+
+// Break down text from horoscope into keywords
+function extractFromText(horoscopeObj) {
   const options = {
     method: "POST",
     headers: {
@@ -102,15 +105,14 @@ function extractFromText(horoscopeObj, extractType) {
     body: '{"text":"' + horoscopeObj.desc + '"}',
   };
 
-  fetch("https://textprobe.p.rapidapi.com/" + extractType, options)
-    .then((response) => response.json())
-    .then((data) => {
-      if(extractType=="topics"){
+  fetch("https://textprobe.p.rapidapi.com/feelings", options)
+    .then(response => response.json())
+    .then(data => {    
         var keywords= data.keywords;
-        keywords.push(horoscopeObj.color);
-        keywords.push(horoscopeObj.luckyNum);
-        keywords.push(horoscopeObj.mood);
-        console.log(keywords);
+            keywords.push(horoscopeObj.color);
+            keywords.push(horoscopeObj.luckyNum);
+            keywords.push(horoscopeObj.mood);
+        
         spotifySearch(keywords);
     })
     .catch((err) => console.error(err));
@@ -126,42 +128,34 @@ function spotifySearch(keywords){
             'X-RapidAPI-Host': 'spotify-scraper.p.rapidapi.com'
         }
     };
+
     fetch("https://spotify-scraper.p.rapidapi.com/v1/search?term=" + uniqueQueryString(keywords), options)
-	.then(response => response.json())
-	.then(data => createSptfyBtn(data.playlists.items.slice(0,3)))
-	.catch(err => console.error(err));
-    
-    }
+        .then(response => response.json())
+        .then(data => createSpotifyLinks(data.playlists.items.slice(0,3)))
+        .catch(err => console.error(err));    
+}
 
 
-    function createSptfyBtn(playlistsArray){
-        for(i=0; i<3; i++){
-       $('#playlists').append($(
-           `<li class="playlist-item">
-                 <a href="${playlistsArray[i].shareUrl}" class="row valign-wrapper">
-                    <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
-                    <h5 class="col s10 no-margin teal-text text-darken-2">${playlistsArray[i].name}</h5>
-                </a>
-            </li>`))
-    }
-    }
-    
 function uniqueQueryString(keywords) {
-//generate a unique query string to search spotify with 
-var uniqueQueryString = "";
-for (i=0; i <= keywords.length && i<1; i++){
-// randomize 
-    uniqueQueryString = uniqueQueryString + " " + keywords[i];
-}
-return uniqueQueryString;
+    var selectionOfKeywords = [];
+    for (i = 0; i < NUM_SPOTIFY_PLAYLISTS && i < keywords.length; i++)
+        selectionOfKeywords.push(keywords.splice(Math.floor(Math.random() * keywords.length), 1)[0]);
+    
+    return selectionOfKeywords.join(' ');
 }
 
 
-
-// generate one string concatenating three keywords 
-// call spotify Search
-
-
+function createSpotifyLinks(playlists){
+    for(i = 0; i < NUM_SPOTIFY_PLAYLISTS; i++)
+        $('#playlists').append($(
+            `<li class="playlist-item">
+                    <a href="${playlists[i].shareUrl}" class="row valign-wrapper">
+                    <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
+                    <h5 class="col s10 no-margin teal-text text-darken-2">${playlists[i].name}</h5>
+                </a>
+            </li>`
+        ));   
+}
 
 
 
@@ -179,6 +173,13 @@ $('#birthday-input').on('submit', function(event){
     event.preventDefault();
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
+
+
+// required to load selects using materialize
+$(document).ready(function(){
+    $('select').formSelect();
+  });
+
 
 
 //INITIALIZE PAGE
