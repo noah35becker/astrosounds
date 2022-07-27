@@ -28,6 +28,7 @@ const SIGNS = [
 const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
 
+const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
 const NUM_SPOTIFY_PLAYLISTS = 1;
 const NUM_PLAYLISTS_MULTIPLIER = 3;
 
@@ -127,12 +128,19 @@ function spotifySearch(keywords){
     var randomKeywords = randKeywords(keywords);
     console.log(randomKeywords);
 
-    randomKeywords.forEach(term => 
-        fetch("https://spotify-scraper.p.rapidapi.com/v1/search?term=" + term, options)
-            .then(response => response.json())
-            .then(data => createSpotifyLinks(data.playlists.items.slice(0, NUM_SPOTIFY_PLAYLISTS * NUM_PLAYLISTS_MULTIPLIER)))
-            .catch(err => console.error(err)) 
-    );
+    var apiCallBuffer = 0;
+
+    randomKeywords.forEach(term => {
+
+        setTimeout(() => {
+            console.log(term);
+            fetch("https://spotify-scraper.p.rapidapi.com/v1/search?term=" + term, options)
+                .then(response => response.json())
+                .then(data => {console.log(data); createSpotifyLink(data.playlists.items.slice(0, NUM_SPOTIFY_PLAYLISTS * NUM_PLAYLISTS_MULTIPLIER));})
+                .catch(err => console.error(err))
+        }, apiCallBuffer);
+        apiCallBuffer += SPOTIFY_API_CALL_BUFFER;
+    });
 }
 
 
@@ -145,19 +153,17 @@ function randKeywords(keywords) {
 }
 
 
-function createSpotifyLinks(playlists){
-    for(i = 0; i < NUM_SPOTIFY_PLAYLISTS; i++){
-        var thisPlaylist = playlists.splice(Math.floor(Math.random() * playlists.length), 1)[0];
-        
-        $('#playlists').append($(
-            `<li class="playlist-item">
-                    <a href="${thisPlaylist.shareUrl}" class="row valign-wrapper">
-                    <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
-                    <h5 class="col s10 no-margin teal-text text-darken-2">${thisPlaylist.name}</h5>
-                </a>
-            </li>`
-        ));
-    }
+function createSpotifyLink(playlists){
+    var thisPlaylist = playlists.splice(Math.floor(Math.random() * playlists.length), 1)[0];
+    
+    $('#playlists').append($(
+        `<li class="playlist-item">
+                <a href="${thisPlaylist.shareUrl}" class="row valign-wrapper">
+                <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
+                <h5 class="col s10 no-margin teal-text text-darken-2">${thisPlaylist.name}</h5>
+            </a>
+        </li>`
+    ));
 }
 
 
