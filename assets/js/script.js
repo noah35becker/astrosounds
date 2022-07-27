@@ -270,6 +270,10 @@ function loadSearchHistory(){
 }
 
 
+function footerYr(){
+    $('footer h6 span.yr').text(DateTime.now().toFormat('y'));
+}
+
 
 //LISTENERS
 
@@ -326,3 +330,4 @@ materializeRefreshSelect();
 
 loadSearchHistory();
 
+footerYr();
