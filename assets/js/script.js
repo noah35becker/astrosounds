@@ -106,37 +106,16 @@ function extractFromText(horoscopeObj, extractType) {
     .then((response) => response.json())
     .then((data) => {
       if(extractType=="topics"){
-       console.log(data);
         var keywords= data.keywords;
         keywords.push(horoscopeObj.color);
         keywords.push(horoscopeObj.luckyNum);
         keywords.push(horoscopeObj.mood);
         console.log(keywords);
         spotifySearch(keywords);
-      }
-
     })
     .catch((err) => console.error(err));
 }
 
-
-
-
-
-
-// get three random keywords from keywordsArray
-
-//return as single string 
-
-function uniqueQueryString(keywords) {
-    //generate a unique query string to search spotify with 
-    var uniqueQueryString = "";
-    for (i=0; i <= keywords.length && i<1; i++){
-    // randomize 
-        uniqueQueryString = uniqueQueryString + " " + keywords[i];
-}
-return uniqueQueryString;
-}
 
 //spotify search function 
 function spotifySearch(keywords){
@@ -166,6 +145,16 @@ function spotifySearch(keywords){
             </li>`))
     }
     }
+    
+function uniqueQueryString(keywords) {
+//generate a unique query string to search spotify with 
+var uniqueQueryString = "";
+for (i=0; i <= keywords.length && i<1; i++){
+// randomize 
+    uniqueQueryString = uniqueQueryString + " " + keywords[i];
+}
+return uniqueQueryString;
+}
 
 
 
@@ -177,6 +166,7 @@ function spotifySearch(keywords){
 
 
 //LISTENERS
+
 //Update # of days when month is (re-)selected
 monthSelectorEl.on('change', function(event){
     event.preventDefault();
@@ -191,22 +181,7 @@ $('#birthday-input').on('submit', function(event){
 });
 
 
-
 //INITIALIZE PAGE
 monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
 monthSelectorEl.trigger('change'); // initialize day dropdown w/ correct # of days for the initial month
 daySelectorEl.val(+DateTime.now().toFormat('d')); // set initial day-of-month to today's
-
-  // separate keywords into searchable strings
-
-  // search spotify with keywords from generator 
- 
-
-  // required to load selects using materialize
-$(document).ready(function(){
-    $('select').formSelect();
-  });
-
-
-
-  
