@@ -27,6 +27,7 @@ const SIGNS = [
 
 const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
+const signWrapperEl = $('#sign-wrapper');
 
 
 
@@ -64,14 +65,22 @@ function getHoroscope(month, day){
     )
         .then(response => response.json())
         .then(data => {
-            var horoscopeObj = { 
+            var horoscopeObj = {
                 color: data.color,
                 desc: data.description,
                 luckyNum: data.lucky_number,
                 mood: data.mood
             };
+
+            $('#sign-wrapper img')
+                .attr('src', `./assets/images/signs/${signName}.png`)
+                .attr('alt', signName + ' symbol');
+            $('#sign-wrapper h5').text(signName);
+            $('#sign-wrapper #lucky-number span').text(horoscopeObj.luckyNum);
+            $('#sign-wrapper #mood span').text(horoscopeObj.mood);
+            $('#sign-wrapper #color span').text(horoscopeObj.color);
+
             extractFromText(horoscopeObj,"topics");
-//             extractFromText(horoscopeObj,"feelings");
         })
         .catch(error =>
             console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
@@ -90,6 +99,7 @@ function getSignName(month, day){
     else
         return 'capricorn';
 }
+
 
 // Get key feelings or topics given text input, extractType options = ["topics","feelings"]
 function extractFromText(horoscopeObj, extractType) {
@@ -141,11 +151,14 @@ $('#birthday-input').on('submit', function(event){
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
 
+
 // required to load selects using materialize
 $(document).ready(function(){
     $('select').formSelect();
   });
 
+
+  
 //INITIALIZE PAGE
 monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
 monthSelectorEl.trigger('change'); // initialize day dropdown w/ correct # of days for the initial month

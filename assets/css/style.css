@@ -105,8 +105,12 @@
     
 
     /* Sign */
-        #sign h5, #sign h6 span{
+        #sign-wrapper h5, #sign-wrapper h6 span{
             font-weight: bolder;
+        }
+
+        #sign-wrapper h5{
+            text-transform: capitalize;
         }
 
         #sign-image{
