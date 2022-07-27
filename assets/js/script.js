@@ -30,7 +30,7 @@ const daySelectorEl = $('select[name="day"]');
 
 const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
 const NUM_SPOTIFY_PLAYLISTS = 1;
-const NUM_PLAYLISTS_MULTIPLIER = 3;
+const PLAYLIST_OPTIONS_MULTIPLIER = 5;
 
 
 
@@ -136,7 +136,7 @@ function spotifySearch(keywords){
             console.log(term);
             fetch("https://spotify-scraper.p.rapidapi.com/v1/search?term=" + term, options)
                 .then(response => response.json())
-                .then(data => {console.log(data); createSpotifyLink(data.playlists.items.slice(0, NUM_SPOTIFY_PLAYLISTS * NUM_PLAYLISTS_MULTIPLIER));})
+                .then(data => {console.log(data); createSpotifyLink(data.playlists.items.slice(0, NUM_SPOTIFY_PLAYLISTS * PLAYLIST_OPTIONS_MULTIPLIER));})
                 .catch(err => console.error(err))
         }, apiCallBuffer);
         apiCallBuffer += SPOTIFY_API_CALL_BUFFER;
@@ -169,6 +169,12 @@ function createSpotifyLink(playlists){
 
 
 //LISTENERS
+
+//Clicking 'Get Sounds' inside #try-again is the same as clicking the Get Sounds button
+$('#try-again a').on('click', function(){
+    $('#birthday-input').trigger('submit');
+});
+
 
 //Update # of days when month is (re-)selected
 monthSelectorEl.on('change', function(event){
