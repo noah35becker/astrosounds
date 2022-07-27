@@ -28,7 +28,8 @@ const SIGNS = [
 const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
 
-const NUM_SPOTIFY_PLAYLISTS = 3;
+const NUM_SPOTIFY_PLAYLISTS = 1;
+const NUM_PLAYLISTS_MULTIPLIER = 3;
 
 
 
@@ -105,10 +106,11 @@ function extractFromText(horoscopeObj) {
     body: '{"text":"' + horoscopeObj.desc + '"}',
   };
 
-  fetch("https://textprobe.p.rapidapi.com/feelings", options)
+  fetch("https://textprobe.p.rapidapi.com/topics", options)
     .then(response => response.json())
     .then(data => {    
-        var keywords= data.keywords;
+        var keywords = data.keywords;
+        console.log(keywords);
             keywords.push(horoscopeObj.color);
             keywords.push(horoscopeObj.luckyNum);
             keywords.push(horoscopeObj.mood);
@@ -129,32 +131,40 @@ function spotifySearch(keywords){
         }
     };
 
-    fetch("https://spotify-scraper.p.rapidapi.com/v1/search?term=" + uniqueQueryString(keywords), options)
-        .then(response => response.json())
-        .then(data => createSpotifyLinks(data.playlists.items.slice(0,3)))
-        .catch(err => console.error(err));    
+    var randomKeywords = randKeywords(keywords);
+    console.log(randomKeywords);
+
+    randomKeywords.forEach(term => 
+        fetch("https://spotify-scraper.p.rapidapi.com/v1/search?term=" + term, options)
+            .then(response => response.json())
+            .then(data => createSpotifyLinks(data.playlists.items.slice(0, NUM_SPOTIFY_PLAYLISTS * NUM_PLAYLISTS_MULTIPLIER)))
+            .catch(err => console.error(err)) 
+    );
 }
 
 
-function uniqueQueryString(keywords) {
+function randKeywords(keywords) {
     var selectionOfKeywords = [];
     for (i = 0; i < NUM_SPOTIFY_PLAYLISTS && i < keywords.length; i++)
         selectionOfKeywords.push(keywords.splice(Math.floor(Math.random() * keywords.length), 1)[0]);
     
-    return selectionOfKeywords.join(' ');
+    return selectionOfKeywords;
 }
 
 
 function createSpotifyLinks(playlists){
-    for(i = 0; i < NUM_SPOTIFY_PLAYLISTS; i++)
+    for(i = 0; i < NUM_SPOTIFY_PLAYLISTS; i++){
+        var thisPlaylist = playlists.splice(Math.floor(Math.random() * playlists.length), 1)[0];
+        
         $('#playlists').append($(
             `<li class="playlist-item">
-                    <a href="${playlists[i].shareUrl}" class="row valign-wrapper">
+                    <a href="${thisPlaylist.shareUrl}" class="row valign-wrapper">
                     <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
-                    <h5 class="col s10 no-margin teal-text text-darken-2">${playlists[i].name}</h5>
+                    <h5 class="col s10 no-margin teal-text text-darken-2">${thisPlaylist.name}</h5>
                 </a>
             </li>`
-        ));   
+        ));
+    }
 }
 
 
@@ -171,6 +181,9 @@ monthSelectorEl.on('change', function(event){
 //Upon birthday submission, begin the chain of API calls
 $('#birthday-input').on('submit', function(event){
     event.preventDefault();
+
+    $('#playlists').empty();
+
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
 
@@ -178,7 +191,7 @@ $('#birthday-input').on('submit', function(event){
 // required to load selects using materialize
 $(document).ready(function(){
     $('select').formSelect();
-  });
+});
 
 
 
