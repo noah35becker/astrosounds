@@ -27,6 +27,7 @@ const SIGNS = [
 
 const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
+const signWrapperEl = $('#sign-wrapper');
 
 var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 const MAX_NUM_SEARCH_HISTORY = 4;
@@ -126,12 +127,21 @@ function getHoroscope(month, day){
     )
         .then(response => response.json())
         .then(data => {
-            var horoscopeObj = { 
+            var horoscopeObj = {
                 color: data.color,
                 desc: data.description,
                 luckyNum: data.lucky_number,
                 mood: data.mood
             };
+
+            $('#sign-wrapper img')
+                .attr('src', `./assets/images/signs/${signName}.png`)
+                .attr('alt', titleCaseSignName(signName) + ' symbol');
+            $('#sign-wrapper h5').text(signName);
+            $('#sign-wrapper #lucky-number span').text(horoscopeObj.luckyNum);
+            $('#sign-wrapper #mood span').text(horoscopeObj.mood);
+            $('#sign-wrapper #color span').text(horoscopeObj.color);
+
             extractFromText(horoscopeObj);
         })
         .catch(err => console.error(err)) //UPDATE LATER with something that the user can actually see (a modal?)
@@ -154,16 +164,24 @@ function getSignName(month, day){
 }
 
 
+// Change sign name to Title Case (for sign image's alt attribute)
+function titleCaseSignName(signName){
+    chars = signName.split('');
+    chars[0] = chars[0].toUpperCase();
+    return chars.join('');
+}
+
+
 // Break down text from horoscope into keywords
 function extractFromText(horoscopeObj) {
     const options = {
-    method: "POST",
-    headers: {
-        "content-type": "application/json",
-        "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
-        "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
-    },
-    body: '{"text":"' + horoscopeObj.desc + '"}',
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
+            "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
+        },
+        body: '{"text":"' + horoscopeObj.desc + '"}',
     };
 
     fetch("https://textprobe.p.rapidapi.com/topics", options)
@@ -294,13 +312,13 @@ monthSelectorEl.on('change', function(event){
 $('#birthday-input').on('submit', function(event){
     event.preventDefault();
 
-    $('#try-again').attr('style', 'display: none');
-    $('#playlists').empty();
-    $('#loading-graphic').append(loadingGraphic);
+    $('#results-wrapper').attr('style', 'display: block');
+        $('#try-again').attr('style', 'display: none');
+        $('#playlists').empty();
+        $('#loading-graphic').append(loadingGraphic);
 
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
-
 
 
 //Upon clicking a search history button, submit that birthday again
@@ -321,7 +339,7 @@ function materializeRefreshSelect(){
 }
 
 
-
+  
 //INITIALIZE PAGE
 monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
 monthSelectorEl.trigger('change'); // initialize day dropdown w/ correct # of days for the initial month
