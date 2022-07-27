@@ -18,6 +18,13 @@
         flex-direction: column;
     }
 
+    header, footer{
+        flex-grow: 0;
+    }
+    body div{
+        flex-grow: 1;
+    }
+
     p{
         margin: 0;
     }
@@ -42,13 +49,23 @@
         vertical-align: middle;
     }
     
-  
+
+
+/* Header */
+    header h1{
+        font-family: 'Merriweather', 'Times New Roman', Times, serif;
+        font-weight: 400;
+        text-shadow: 2px 4px 8px white;
+        margin-bottom: 0;
+    }
+
     
-/*Description*/
+/* Description */
     #description{
         font-style: italic;
-        margin-bottom: 35px;
+        margin-bottom: 55px;
         font-size: 2rem;
+        text-shadow: 2px 4px 8px white;
     }
 
 
@@ -121,9 +138,62 @@
         }
 
     
-    /* Playlist */
+    /* Playlists */
         .playlist-item h5{
             font-weight: bold;
+            opacity: 1;
+            transition: opacity .3s;
+        }
+        .playlist-item h5:hover{
+            opacity: .7;
+        }
+        
+        .playlist-item img{
+            padding-right: 0 !important;
         }
 
-    
+        #try-again{
+            line-height: 130%;
+            font-style: italic;
+        }
+
+        #try-again a{
+            font-weight: bolder;
+            font-style: normal;
+            cursor: pointer;
+            text-decoration: underline;
+            opacity: 1;
+            transition: opacity .3s;
+        }
+        #try-again a:hover{
+            opacity: .7;
+        }
+        
+
+
+/* Footer */
+    footer{
+        margin-bottom: 15px;
+    }
+
+
+    footer h6{
+        font-size: 1.05rem;
+        font-style: italic;
+    }
+
+    footer a{
+        opacity: 1;
+        transition: opacity .3s;
+    }
+    footer a:hover{
+        opacity: .7;
+    }
+
+    footer .copyright{
+        font-style: normal;
+    }
+
+    footer h6 span.left-border{
+        border-left: 1px solid black;
+    }

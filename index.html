@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap">
-    <link rel="stylesheet"href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/style.css" />
 
     <title>Astrosounds</title>
@@ -28,9 +27,9 @@
         
         <!-- input form & history -->
         <div id="user-input" class="col s12 m3 l3">
-            <h5 class="align-center">When's your birthday?</h5>
+            <h5 class="center-align">When's your birthday?</h5>
             <form id="birthday-input" class="center-align">
-                <select class="col s8 m8 l8 " name="month" form="birthday-input" class="input-field" required autofocus>
+                <select class="col s8 m8 l8 input-field" name="month" form="birthday-input" required autofocus>
                     <option value="january">January</option>
                     <option value="february">February</option>
                     <option value="march">March</option>
@@ -44,8 +43,8 @@
                     <option value="november">November</option>
                     <option value="december">December</option>
                 </select>
-                <select class="col s4 m4 l4 " name="day" form="birthday-input" required></select>
-                <button class="btn search-btn waves-effect waves-light" type="submit">Get sounds&nbsp;&nbsp;&nbsp;<i class="material-icons">send</i></button>
+                <select class="col s4 m4 l4 input-field" name="day" form="birthday-input" required></select>
+                <button class="btn search-btn waves-effect waves-light" type="submit">Get sounds</button>
             </form>
 
             <div id="birthday-history">
@@ -59,8 +58,8 @@
 
         <main id="results-wrapper" class="row col s12 m9 l9" style="display: none">
             <div id="results-header">
-                <h5 id="todays-date" class="center-align">Today's date:&nbsp;<span class="pink lighten-3">July 26</span></h5>
-                <h5 id="searched-birthday" class="center-align">Your birthday:&nbsp;<span class="pink lighten-3">September 24</span></h5>
+                <h5 id="todays-date" class="center-align">Today's date:&nbsp;&nbsp;<span class="pink lighten-3">July 26</span></h5>
+                <h5 id="searched-birthday" class="center-align">Your birthday:&nbsp;&nbsp;<span class="pink lighten-3">September 24</span></h5>
             </div>
             <div id="results">
                 <div id="sign-wrapper" class="col s12 m4 l4 center-align">
@@ -71,37 +70,34 @@
                     <h6 id="color">Color:&nbsp;<span></span></h6>
                 </div>
 
-                <div id="music">
+                <div id="music" class="col s12 m8 l8">
                     <h5 class="center-align">Playlists for your horoscope</h5>
-                    <ul id="playlists" class="col s12 m8 l8">
-                        <li class="playlist-item">
-                            <a href="https://www.123.com" class="row valign-wrapper">
-                                <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
-                                <h5 class="col s10 no-margin teal-text text-darken-2">
-                                    Playlist Name
-                                </h5>
-                            </a>
-                        </li>
-                        <li class="playlist-item">
-                            <a href="https://www.123.com" class="row valign-wrapper">
-                                <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="spotify logo"/>
-                                <h5 class="col s10 no-margin teal-text text-darken-2">
-                                    Playlist Name
-                                </h5>
-                            </a>
-                        </li>
-                    </ul>
+                    <ul id="playlists"></ul>
+                    <div id="loading-graphic" class="center-align"></div>
+                    <h6 id="try-again" class="center-align">
+                        Want to hear something different?
+                        <br/>
+                        Click <a class="teal-text text-darken-1">Get Sounds</a> again for another recommendation!
+                    </h6>
                 </div>
             </div>
         </main>
     </div>
-    <footer>
 
+    <footer class="center-align">
+        <h6>
+            Designed and coded by
+                <a href="https://github.com/claudiayile" target="_blank" class="teal-text text-darken-2">Claudia Yile</a>,
+                <a href="https://github.com/mnwana" target="_blank" class="teal-text text-darken-2">Marielle Nwana</a>,
+                <a href="https://github.com/noah35becker" target="_blank" class="teal-text text-darken-2">Noah Becker</a>
+            &nbsp;&nbsp;<span class="left-border"></span>&nbsp;&nbsp;
+            <span class="copyright">&copy;&nbsp;<span class="yr"></span></span>
+        </h6>
     </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@2.4.0/build/global/luxon.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> <!-- REMOVE THIS LATER if we don't end up using any of Materialize's JS functions -->
     <script src="./assets/js/script.js"></script>
 </body>
-
 </html>

@@ -29,6 +29,66 @@ const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
 const signWrapperEl = $('#sign-wrapper');
 
+var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+const MAX_NUM_SEARCH_HISTORY = 4;
+
+const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
+const NUM_SPOTIFY_PLAYLISTS = 1;
+const PLAYLIST_OPTIONS_PER_KEYWORD = 5;
+
+const loadingGraphic = $(
+`<div class="preloader-wrapper big active">
+    <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+
+    <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+
+    <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+
+    <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle">
+            </div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+</div>`
+);
+
 
 
 //FUNCTIONS
@@ -47,6 +107,8 @@ function setNumDays(month){
 
     if (daySelected <= daysInMonth)
         daySelectorEl.val(daySelected);
+    
+    materializeRefreshSelect();
 }
 
 
@@ -80,11 +142,12 @@ function getHoroscope(month, day){
             $('#sign-wrapper #mood span').text(horoscopeObj.mood);
             $('#sign-wrapper #color span').text(horoscopeObj.color);
 
-            extractFromText(horoscopeObj,"topics");
+            extractFromText(horoscopeObj);
         })
-        .catch(error =>
-            console.log('system error') //UPDATE LATER with something that the user can actually see (a modal?)
-        );
+        .catch(err => console.error(err)) //UPDATE LATER with something that the user can actually see (a modal?)
+    ;
+
+    saveSearchHistory(month, day);
 }
 
 
@@ -109,42 +172,134 @@ function titleCaseSignName(signName){
 }
 
 
-// Get key feelings or topics given text input, extractType options = ["topics","feelings"]
-function extractFromText(horoscopeObj, extractType) {
-  const options = {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
-      "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
-    },
-    body: '{"text":"' + horoscopeObj.desc + '"}',
-  };
+// Break down text from horoscope into keywords
+function extractFromText(horoscopeObj) {
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
+            "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
+        },
+        body: '{"text":"' + horoscopeObj.desc + '"}',
+    };
 
-  fetch("https://textprobe.p.rapidapi.com/" + extractType, options)
-    .then((response) => response.json())
-    .then((data) => {
-      if(extractType=="topics"){
-        var keywords= data.keywords;
-        keywords.push(horoscopeObj.color);
-        keywords.push(horoscopeObj.luckyNum);
-        keywords.push(horoscopeObj.mood);
-        console.log(keywords);
-        return keywords;
-      }
-      else if (extractType=="feelings"){
-        var feelings = [data.emotion_prediction];
-        feelings.push(horoscopeObj.mood);
-        console.log(feelings);
-        return feelings;
-      }
-    })
-    .catch((err) => console.error(err));
+    fetch("https://textprobe.p.rapidapi.com/topics", options)
+        .then(response => response.json())
+        .then(data => spotifySearch(data.keywords))
+        .catch(err => console.error(err) //UPDATE LATER with something that the user can actually see (a modal?)
+    );
 }
 
 
+//spotify search function 
+function spotifySearch(keywords){
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': '00173b333cmsh7f497d732d65894p1a0c45jsn8fad42dfb52d',
+            'X-RapidAPI-Host': 'spotify-scraper.p.rapidapi.com'
+        }
+    };
+
+    var randomKeywords = randKeywords(keywords);
+
+    var apiCallBuffer = SPOTIFY_API_CALL_BUFFER; //initialize to this val (rather than having the first API call run immed.) in case user clicks "Get Sounds" repeatedly in quick succession
+    randomKeywords.forEach((term, index) => {
+        setTimeout(() => {
+            fetch(`https://spotify-scraper.p.rapidapi.com/v1/search?term=${term}`, options)
+                .then(response => response.json())
+                .then(data => {                    
+                    if (index === randomKeywords.length - 1){ // after the final Spotify API call, remove the loading graphic and show #try-again
+                        $('#loading-graphic').empty();
+                        $('#try-again').attr('style', 'display: block');
+                    }
+
+                    createSpotifyLink(data.playlists.items.slice(0, PLAYLIST_OPTIONS_PER_KEYWORD));
+                })
+                .catch(err => console.error(err)) //UPDATE LATER with something that the user can actually see (a modal?)
+        }, apiCallBuffer);
+
+        apiCallBuffer += SPOTIFY_API_CALL_BUFFER;
+    });
+    
+}
+
+
+function randKeywords(keywords) {
+    var selectionOfKeywords = [];
+    for (i = 0; i < NUM_SPOTIFY_PLAYLISTS && i < keywords.length; i++)
+        selectionOfKeywords.push(keywords.splice(Math.floor(Math.random() * keywords.length), 1)[0]);
+    
+    return selectionOfKeywords;
+}
+
+
+function createSpotifyLink(playlistOptions){
+    var chosenPlaylist = playlistOptions[Math.floor(Math.random() * playlistOptions.length)];
+    
+    $('#playlists').append($(
+        `<li class="playlist-item">
+                <a href="${chosenPlaylist.shareUrl}" class="row valign-wrapper" target="_blank">
+                <img class="responsive-img col s2" src="./assets/images/spotify.png" alt="Spotify logo"/>
+                <h5 class="col s10 no-margin teal-text text-darken-2">${chosenPlaylist.name}</h5>
+            </a>
+        </li>`
+    ));
+}
+
+
+//Save searched birthday history to localStorage
+function saveSearchHistory(newMonth, newDay){
+    var trulyNewItem = true;
+    
+    for (i = 0; i < searchHistory.length; i++)
+        if (newMonth === searchHistory[i].month && newDay === searchHistory[i].day){
+            trulyNewItem = false;
+            searchHistory.unshift(searchHistory.splice(i, 1)[0]);
+            break;
+        }
+    
+    if (trulyNewItem){
+        searchHistory.unshift({
+            month: newMonth,
+            day: newDay
+        });
+        
+        if (searchHistory.length > MAX_NUM_SEARCH_HISTORY)
+            searchHistory.pop();
+    }
+
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+    loadSearchHistory();
+}
+
+
+// Load search history on page
+function loadSearchHistory(){
+    $('#birthday-history-list').empty();
+    searchHistory.forEach(item => 
+        $('#birthday-history-list').append(
+            `<li class="collection-item no-padding">
+                <button data-month=${item.month} data-day=${item.day} class="birthday-btn btn waves-effect waves-light brown lighten-1">${item.month} ${item.day}</button>
+            </li>`
+        )
+    );
+}
+
+
+function footerYr(){
+    $('footer h6 span.yr').text(DateTime.now().toFormat('y'));
+}
+
 
 //LISTENERS
+
+//Clicking 'Get Sounds' inside #try-again is the same as clicking the Get Sounds button
+$('#try-again a').on('click', function(){
+    $('#birthday-input').trigger('submit');
+});
+
 
 //Update # of days when month is (re-)selected
 monthSelectorEl.on('change', function(event){
@@ -156,15 +311,32 @@ monthSelectorEl.on('change', function(event){
 //Upon birthday submission, begin the chain of API calls
 $('#birthday-input').on('submit', function(event){
     event.preventDefault();
+
     $('#results-wrapper').attr('style', 'display: block');
+        $('#try-again').attr('style', 'display: none');
+        $('#playlists').empty();
+        $('#loading-graphic').append(loadingGraphic);
+
     getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
 });
 
 
-// required to load selects using materialize
-$(document).ready(function(){
-    $('select').formSelect();
-  });
+//Upon clicking a search history button, submit that birthday again
+$('#birthday-history-list').on('click', '.birthday-btn', function(){
+    monthSelectorEl.val($(this).attr('data-month'));
+    daySelectorEl.val($(this).attr('data-day'));
+    
+    monthSelectorEl.trigger('change');
+    $('#birthday-input').trigger('submit');
+})
+
+
+//Required to load 'select' elements using Materialize
+function materializeRefreshSelect(){
+    $(document).ready(function(){
+        $('select').formSelect();
+    });
+}
 
 
   
@@ -172,3 +344,8 @@ $(document).ready(function(){
 monthSelectorEl.val(DateTime.now().toFormat('MMMM').toLowerCase()); // set initial month to today's
 monthSelectorEl.trigger('change'); // initialize day dropdown w/ correct # of days for the initial month
 daySelectorEl.val(+DateTime.now().toFormat('d')); // set initial day-of-month to today's
+materializeRefreshSelect();
+
+loadSearchHistory();
+
+footerYr();
