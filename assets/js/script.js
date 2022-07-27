@@ -34,7 +34,7 @@ const MAX_NUM_SEARCH_HISTORY = 4;
 
 const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
 const NUM_SPOTIFY_PLAYLISTS = 1;
-const PLAYLIST_OPTIONS_PER_KEYWORD = 5;
+const PLAYLIST_OPTIONS_PER_KEYWORD = 15;
 
 const loadingGraphic = $(
 `<div class="preloader-wrapper big active">
@@ -112,19 +112,25 @@ function setNumDays(month){
 }
 
 
+// Return a given word in Title Case
+function wordToTitleCase(word){
+    chars = word.split('');
+    chars[0] = chars[0].toUpperCase();
+    return chars.join('');
+}
+
+
 // Get horoscope based on sign name
 function getHoroscope(month, day){
     var signName = getSignName(month, day);
 
-    fetch('https://sameer-kumar-aztro-v1.p.rapidapi.com/?sign=' + signName + '&day=today',
-        {
-            method: 'POST',
-            headers: {
-                'X-RapidAPI-Key': '0998422ae9msh631f094298f7caep1b0a7bjsnf6c1671b7893',
-                'X-RapidAPI-Host': 'sameer-kumar-aztro-v1.p.rapidapi.com'
-            }
+    fetch(`https://sameer-kumar-aztro-v1.p.rapidapi.com/?sign=${signName}&day=today`, {
+        method: 'POST',
+        headers: {
+            'X-RapidAPI-Key': '0998422ae9msh631f094298f7caep1b0a7bjsnf6c1671b7893',
+            'X-RapidAPI-Host': 'sameer-kumar-aztro-v1.p.rapidapi.com'
         }
-    )
+    })
         .then(response => response.json())
         .then(data => {
             var horoscopeObj = {
@@ -136,7 +142,7 @@ function getHoroscope(month, day){
 
             $('#sign-wrapper img')
                 .attr('src', `./assets/images/signs/${signName}.png`)
-                .attr('alt', titleCaseSignName(signName) + ' symbol');
+                .attr('alt', wordToTitleCase(signName) + ' symbol');
             $('#sign-wrapper h5').text(signName);
             $('#sign-wrapper #lucky-number span').text(horoscopeObj.luckyNum);
             $('#sign-wrapper #mood span').text(horoscopeObj.mood);
@@ -144,7 +150,7 @@ function getHoroscope(month, day){
 
             extractFromText(horoscopeObj);
         })
-        .catch(err => console.error(err)) //UPDATE LATER with something that the user can actually see (a modal?)
+        .catch(err => errorMsg())
     ;
 
     saveSearchHistory(month, day);
@@ -164,14 +170,6 @@ function getSignName(month, day){
 }
 
 
-// Change sign name to Title Case (for sign image's alt attribute)
-function titleCaseSignName(signName){
-    chars = signName.split('');
-    chars[0] = chars[0].toUpperCase();
-    return chars.join('');
-}
-
-
 // Break down text from horoscope into keywords
 function extractFromText(horoscopeObj) {
     const options = {
@@ -187,8 +185,8 @@ function extractFromText(horoscopeObj) {
     fetch("https://textprobe.p.rapidapi.com/topics", options)
         .then(response => response.json())
         .then(data => spotifySearch(data.keywords))
-        .catch(err => console.error(err) //UPDATE LATER with something that the user can actually see (a modal?)
-    );
+        .catch(err => errorMsg())
+    ;
 }
 
 
@@ -217,7 +215,7 @@ function spotifySearch(keywords){
 
                     createSpotifyLink(data.playlists.items.slice(0, PLAYLIST_OPTIONS_PER_KEYWORD));
                 })
-                .catch(err => console.error(err)) //UPDATE LATER with something that the user can actually see (a modal?)
+                .catch(err => errorMsg())
         }, apiCallBuffer);
 
         apiCallBuffer += SPOTIFY_API_CALL_BUFFER;
@@ -288,9 +286,37 @@ function loadSearchHistory(){
 }
 
 
+// Set year of copyright in footer
 function footerYr(){
     $('footer h6 span.yr').text(DateTime.now().toFormat('y'));
 }
+
+
+//Display error msg and auto-refresh page
+function errorMsg(){
+    var secsTillRefresh = 4;
+    
+    $('#results-wrapper')
+        .empty()
+        .append($(
+            `<h5 id="error-msg" class="red-text text-darken-4 center-align">
+                System error
+                <br/>
+                The page will refresh in <span>${secsTillRefresh} second${secsTillRefresh > 1 ? 's' : ''}</span>
+            </h5>`
+        ))
+    ;
+    
+    setInterval(() => {
+        secsTillRefresh--;
+
+        if (secsTillRefresh === 0)
+            window.location.reload();
+        else
+            $('#error-msg span').text(`${secsTillRefresh} second${secsTillRefresh > 1 ? 's' : ''}`);
+    }, 1000);
+}
+
 
 
 //LISTENERS
@@ -312,12 +338,19 @@ monthSelectorEl.on('change', function(event){
 $('#birthday-input').on('submit', function(event){
     event.preventDefault();
 
-    $('#results-wrapper').attr('style', 'display: block');
-        $('#try-again').attr('style', 'display: none');
-        $('#playlists').empty();
-        $('#loading-graphic').append(loadingGraphic);
+    var submittedMonth = monthSelectorEl.val();
+    var submittedDay = daySelectorEl.val();
 
-    getHoroscope(monthSelectorEl.val(), daySelectorEl.val());
+    $('#todays-date span').text(DateTime.now().toFormat('MMMM d'));
+    $('#searched-birthday span').text(`${wordToTitleCase(submittedMonth)} ${submittedDay}`);
+    $('#try-again').attr('style', 'display: none');
+    $('#playlists').empty();
+    $('#loading-graphic').append(loadingGraphic);
+
+
+    $('#results-wrapper').attr('style', 'display: block');
+
+    getHoroscope(submittedMonth, submittedDay);
 });
 
 
