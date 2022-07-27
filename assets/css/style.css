@@ -42,13 +42,22 @@
         vertical-align: middle;
     }
     
-  
+
+
+/* Header */
+    header h1{
+        font-family: 'Merriweather', 'Times New Roman', Times, serif;
+        font-weight: 400;
+        text-shadow: 2px 4px 8px white;
+    }
+
     
-/*Description*/
+/* Description */
     #description{
         font-style: italic;
         margin-bottom: 35px;
         font-size: 2rem;
+        text-shadow: 2px 4px 8px white;
     }
 
 
