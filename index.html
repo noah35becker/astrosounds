@@ -28,12 +28,12 @@
     <!-- container for body, excluding header & footer -->
     <div class="container row">
       <!-- input form / search history -->
-      <div id="user-input" class="col s12 m3 l3">
+      <div id="user-input" class="col s12 m3">
         <h5 class="center-align">When's your birthday?</h5>
         <!-- birthday form -->
         <form id="birthday-input" class="center-align">
           <select
-            class="col s8 m8 l8 input-field"
+            class="col s8 input-field"
             name="month"
             form="birthday-input"
             required
@@ -53,7 +53,7 @@
             <option value="december">December</option>
           </select>
           <select
-            class="col s4 m4 l4 input-field"
+            class="col s4 input-field"
             name="day"
             form="birthday-input"
             required
@@ -62,7 +62,7 @@
             Get sounds
           </button>
         </form>
-        <!-- birthday history -->
+        <!-- search history -->
         <div id="birthday-history">
           <h5 id="birthday-history-header" class="center-align">
             Previously searched:
@@ -73,7 +73,7 @@
       <!-- api call results wrapper-->
       <main
         id="results-wrapper"
-        class="row col s12 m9 l9"
+        class="row col s12 m9"
         style="display: none"
       >
         <!-- results header displaying current date and user input date -->
@@ -89,14 +89,14 @@
         <div id="results-content">
           <!-- output from horoscope api -->
           <div id="sign-wrapper" class="col s12 m4 l4 center-align">
-            <img class="responsive-img" />
+            <img id="sign-image" class="responsive-img" />
             <h5></h5>
             <h6 id="lucky-number">Lucky number:&nbsp;<span></span></h6>
             <h6 id="mood">Mood:&nbsp;<span></span></h6>
             <h6 id="color">Color:&nbsp;<span></span></h6>
           </div>
           <!-- output from spotify scraper api -->
-          <div id="music-wrapper" class="col s12 m8 l8">
+          <div id="music-wrapper" class="col s12 m8">
             <h5 id="music-header" class="center-align"></h5>
             <ul id="playlists"></ul>
             <div id="loading-graphic" class="center-align"></div>
