@@ -18,15 +18,15 @@
     <title>Astrosounds</title>
   </head>
   <body>
-    <!-- ceader -->
+    <!-- header -->
     <header>
       <h1 class="center-align deep-orange-text text-darken-4">Astrosounds</h1>
+      <h4 class="col s12 center-align">
+        Spotify playlists based on today's horoscope
+      </h4>
     </header>
     <!-- container for body, excluding header & footer -->
     <div class="container row">
-      <h4 id="description" class="col s12 center-align">
-        Spotify playlists based on today's horoscope
-      </h4>
       <!-- input form / search history -->
       <div id="user-input" class="col s12 m3 l3">
         <h5 class="center-align">When's your birthday?</h5>
@@ -86,7 +86,7 @@
           </h5>
         </div>
         <!--  api results-->
-        <div id="results">
+        <div id="results-content">
           <!-- output from horoscope api -->
           <div id="sign-wrapper" class="col s12 m4 l4 center-align">
             <img class="responsive-img" />
@@ -96,7 +96,7 @@
             <h6 id="color">Color:&nbsp;<span></span></h6>
           </div>
           <!-- output from spotify scraper api -->
-          <div id="music" class="col s12 m8 l8">
+          <div id="music-wrapper" class="col s12 m8 l8">
             <h5 class="center-align">Playlists for your horoscope</h5>
             <ul id="playlists"></ul>
             <div id="loading-graphic" class="center-align"></div>
@@ -143,7 +143,6 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@2.4.0/build/global/luxon.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <!-- REMOVE THIS LATER if we don't end up using any of Materialize's JS functions -->
     <script src="./assets/js/script.js"></script>
   </body>
 </html>

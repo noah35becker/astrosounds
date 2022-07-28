@@ -1,3 +1,4 @@
+
 //GLOBAL VARIABLES
 
 const DateTime = luxon.DateTime;
@@ -5,6 +6,7 @@ const DateTime = luxon.DateTime;
 // variables for sign based on birth date and month
 const DUMMY_LEAP_YR = 2024; // assume that all birthdays occur in a leap year (to ensure Feb 29 functionality)
 
+// astrological signs
 class Sign {
   constructor(name, lastDayOfLeapYr) {
     this.name = name;
@@ -26,7 +28,7 @@ const SIGNS = [
   new Sign("sagittarius", 356),
 ];
 
-//  variables for page elements
+// variables for page elements
 const monthSelectorEl = $('select[name="month"]');
 const daySelectorEl = $('select[name="day"]');
 const signWrapperEl = $("#sign-wrapper");
@@ -40,7 +42,7 @@ const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
 const NUM_SPOTIFY_PLAYLISTS = 1;
 const PLAYLIST_OPTIONS_PER_KEYWORD = 15;
 
-// materialize graphic for loading spinner
+// Materialize CSS framework: graphic for loading spinner
 const loadingGraphic = $(
   `<div class="preloader-wrapper big active">
     <div class="spinner-layer spinner-blue">
@@ -94,6 +96,7 @@ const loadingGraphic = $(
 </div>`
 );
 
+
 //FUNCTIONS
 
 // Populate user input 'days' dropdown with correct # of days for given month
@@ -143,36 +146,36 @@ function getHoroscope(month, day) {
     .then((response) => response.json())
     .then((data) => {
         // create horoscope object from api call data
-      var horoscopeObj = {
-        color: data.color,
-        desc: data.description,
-        luckyNum: data.lucky_number,
-        mood: data.mood,
-      };
-// update sign wrapper to display data returned fromc all
-      $("#sign-wrapper img")
-        .attr("src", `./assets/images/signs/${signName}.png`)
-        .attr("alt", wordToTitleCase(signName) + " symbol");
-      $("#sign-wrapper h5").text(signName);
-      $("#sign-wrapper #lucky-number span").text(horoscopeObj.luckyNum);
-      $("#sign-wrapper #mood span").text(horoscopeObj.mood);
-      $("#sign-wrapper #color span").text(horoscopeObj.color);
-// call extractFromText passing horoscope object
+        var horoscopeObj = {
+            color: data.color,
+            desc: data.description,
+            luckyNum: data.lucky_number,
+            mood: data.mood,
+        };
+        // update sign wrapper to display data returned fromc all
+        $("#sign-wrapper img")
+            .attr("src", `./assets/images/signs/${signName}.png`)
+            .attr("alt", wordToTitleCase(signName) + " symbol");
+        $("#sign-wrapper h5").text(signName);
+        $("#sign-wrapper #lucky-number span").text(horoscopeObj.luckyNum);
+        $("#sign-wrapper #mood span").text(horoscopeObj.mood);
+        $("#sign-wrapper #color span").text(horoscopeObj.color);
+      // call extractFromText passing horoscope object
       extractFromText(horoscopeObj);
     })
     .catch((err) => errorMsg());
-// save date and month to search history
+  // save date and month to search history
   saveSearchHistory(month, day);
 }
 
 // Get sign name based on month and day
 function getSignName(month, day) {
-    // create formatted date using parametrs & dummy leap year value
+  // create formatted date using parametrs & dummy leap year value
   var dayOfYr = +DateTime.fromFormat(
     `${month} ${day} ${DUMMY_LEAP_YR}`,
     "MMMM d y"
   ).toFormat("o");
-// find sign based on dayofyear and return sign
+  // find sign based on dayofyear and return sign
   var sign = SIGNS.find((elem) => dayOfYr <= elem.lastDay);
   if (sign) return sign.name;
   else return "capricorn";
@@ -198,7 +201,7 @@ function extractFromText(horoscopeObj) {
     .catch((err) => errorMsg());
 }
 
-//spotify search function using array of keywords as parameter
+// Spotify search function using array of keywords as parameter
 function spotifySearch(keywords) {
   // initialize search headers and method
   const options = {
@@ -240,7 +243,7 @@ function spotifySearch(keywords) {
   });
 }
 
-// select random keyword from array of keywords
+// Select random keyword from array of keywords
 function randKeywords(keywords) {
   // initialize empty array of selected words
   var selectionOfKeywords = [];
@@ -254,7 +257,7 @@ function randKeywords(keywords) {
   return selectionOfKeywords;
 }
 
-// create link li in playlists ul
+// Create link li inside playlists ul
 function createSpotifyLink(playlistOptions) {
   // from array of playlists, choose random index and select that playlist
   var chosenPlaylist =
@@ -272,7 +275,7 @@ function createSpotifyLink(playlistOptions) {
   );
 }
 
-//Save searched birthday history to localStorage
+// Save searched birthday history to localStorage
 function saveSearchHistory(newMonth, newDay) {
   var trulyNewItem = true;
   // for each value in array, determine if it is a new value
@@ -316,10 +319,10 @@ function footerYr() {
   $("footer h6 span.yr").text(DateTime.now().toFormat("y"));
 }
 
-//Display error msg and auto-refresh page
+// Display error msg and auto-refresh page
 function errorMsg() {
   var secsTillRefresh = 4;
-  // update results wrapper to display refresh message
+  // Update results wrapper to display refresh message
   $("#results-wrapper")
     .empty()
     .append(
@@ -333,7 +336,7 @@ function errorMsg() {
             </h5>`
       )
     );
-  // run countdown that shows seconds until refresh, updating error messge text
+  // Run countdown that shows seconds until refresh, updating error message text
   setInterval(() => {
     secsTillRefresh--;
 
@@ -345,20 +348,28 @@ function errorMsg() {
   }, 1000);
 }
 
+// Required to load 'select' elements using Materialize CSS framework
+function materializeRefreshSelect() {
+    $(document).ready(function () {
+      $("select").formSelect();
+    });
+  }
+
+
 //LISTENERS
 
-//Clicking 'Get Sounds' inside #try-again is the same as clicking the Get Sounds button
+// Clicking 'Get Sounds' inside #try-again is the same as clicking the Get Sounds button
 $("#try-again a").on("click", function () {
   $("#birthday-input").trigger("submit");
 });
 
-//Update # of days when month is (re-)selected
+// Update # of days when month is (re-)selected
 monthSelectorEl.on("change", function (event) {
   event.preventDefault();
   setNumDays($(this).val());
 });
 
-//Upon birthday submission, begin the chain of API calls
+// Upon birthday submission, begin the chain of API calls
 $("#birthday-input").on("submit", function (event) {
   event.preventDefault();
   // read submitted values
@@ -380,7 +391,7 @@ $("#birthday-input").on("submit", function (event) {
   getHoroscope(submittedMonth, submittedDay);
 });
 
-//Upon clicking a search history button, submit that birthday again
+// Upon clicking a search history button, submit that birthday again
 $("#birthday-history-list").on("click", ".birthday-btn", function () {
   // update selector element values to history button attributes
   monthSelectorEl.val($(this).attr("data-month"));
@@ -390,17 +401,11 @@ $("#birthday-history-list").on("click", ".birthday-btn", function () {
   $("#birthday-input").trigger("submit");
 });
 
-//Required to load 'select' elements using Materialize
-function materializeRefreshSelect() {
-  $(document).ready(function () {
-    $("select").formSelect();
-  });
-}
 
 //INITIALIZE PAGE
 monthSelectorEl.val(DateTime.now().toFormat("MMMM").toLowerCase()); // set initial month to today's
 monthSelectorEl.trigger("change"); // initialize day dropdown w/ correct # of days for the initial month
 daySelectorEl.val(+DateTime.now().toFormat("d")); // set initial day-of-month to today's
-materializeRefreshSelect(); // load select elements using Materialize
-loadSearchHistory(); //load search history
-footerYr(); //set footer
+materializeRefreshSelect(); // load select elements using Materialize CSS framework
+loadSearchHistory(); // load search history
+footerYr(); // set footer
