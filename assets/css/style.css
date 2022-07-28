@@ -66,6 +66,7 @@
         margin-bottom: 35px;
         font-size: 2rem;
         text-shadow: 2px 4px 8px white;
+        padding: 0 10px;
     }
 
 
@@ -140,10 +141,7 @@
         }
 
         #sign-image{
-            font-family: monospace;
-            letter-spacing: .8px;
-            font-size: 2.3px;
-            font-weight: bold;
+            max-height: 150px;
         }
 
     
@@ -189,11 +187,13 @@
 /* Footer */
     footer{
         margin-bottom: 15px;
+        padding: 0 20px;
     }
 
     footer h6{
         font-size: 1.05rem;
         font-style: italic;
+        line-height: 1.5;
     }
 
     footer a{
@@ -211,3 +211,20 @@
     footer h6 span.left-border{
         border-left: 1px solid black;
     }
+
+
+
+/* MEDIA QUERIES for responsive design (in tandem with Materialize CSS framework */
+@media screen and (max-width: 600px) {
+    header h1{
+        font-size: 3rem;
+    }
+
+    header h4{
+        font-size: 1.5rem;
+    }
+    
+    #birthday-history{
+        display: none;
+    }
+}
