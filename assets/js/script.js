@@ -40,7 +40,7 @@ const MAX_NUM_SEARCH_HISTORY = 4;
 // variables for spotify search & link creation
 const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
 const NUM_SPOTIFY_PLAYLISTS = 1;
-const PLAYLIST_OPTIONS_PER_KEYWORD = 15;
+const PLAYLIST_OPTIONS_PER_KEYWORD = 30;
 
 // Materialize CSS framework: graphic for loading spinner
 const loadingGraphic = $(
