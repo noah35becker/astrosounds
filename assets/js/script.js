@@ -130,9 +130,9 @@ function wordToTitleCase(word) {
 
 // Get horoscope based on sign name
 function getHoroscope(month, day) {
-    // get sign name based on birth date and month
+  // get sign name based on birth date and month
   var signName = getSignName(month, day);
-// call horoscope api passing sign name
+  // call horoscope api passing sign name
   fetch(
     `https://sameer-kumar-aztro-v1.p.rapidapi.com/?sign=${signName}&day=today`,
     {
@@ -145,21 +145,22 @@ function getHoroscope(month, day) {
   )
     .then((response) => response.json())
     .then((data) => {
-        // create horoscope object from api call data
-        var horoscopeObj = {
-            color: data.color,
-            desc: data.description,
-            luckyNum: data.lucky_number,
-            mood: data.mood,
-        };
-        // update sign wrapper to display data returned fromc all
-        $("#sign-wrapper img")
-            .attr("src", `./assets/images/signs/${signName}.png`)
-            .attr("alt", wordToTitleCase(signName) + " symbol");
-        $("#sign-wrapper h5").text(signName);
-        $("#sign-wrapper #lucky-number span").text(horoscopeObj.luckyNum);
-        $("#sign-wrapper #mood span").text(horoscopeObj.mood);
-        $("#sign-wrapper #color span").text(horoscopeObj.color);
+      // create horoscope object from api call data
+      var horoscopeObj = {
+        color: data.color,
+        desc: data.description,
+        luckyNum: data.lucky_number,
+        mood: data.mood,
+      };
+      // update sign wrapper to display data returned from call
+      $("#sign-wrapper img")
+        .attr("src", `./assets/images/signs/${signName}.png`)
+        .attr("alt", wordToTitleCase(signName) + " symbol");
+      $("#sign-wrapper h5").text(signName);
+      $("#sign-wrapper #lucky-number span").text(horoscopeObj.luckyNum);
+      $("#sign-wrapper #mood span").text(horoscopeObj.mood);
+      $("#sign-wrapper #color span").text(horoscopeObj.color);
+      console.log(horoscopeObj);
       // call extractFromText passing horoscope object
       extractFromText(horoscopeObj);
     })
@@ -197,7 +198,10 @@ function extractFromText(horoscopeObj) {
   fetch("https://textprobe.p.rapidapi.com/topics", options)
     .then((response) => response.json())
     // pass extracted keywords to spotify search function
-    .then((data) => spotifySearch(data.keywords))
+    .then((data) => {
+      console.log(data.keywords);
+      spotifySearch(data.keywords);
+    })
     .catch((err) => errorMsg());
 }
 
@@ -213,6 +217,7 @@ function spotifySearch(keywords) {
   };
   // get subset of keywords using randomKeywords function
   var randomKeywords = randKeywords(keywords);
+  console.log(randomKeywords);
   // create api buffer to avoid user issues
   var apiCallBuffer = SPOTIFY_API_CALL_BUFFER; //initialize to this val (rather than having the first API call run immed.) in case user clicks "Get Sounds" repeatedly in quick succession
   //   for each random keyword
@@ -259,6 +264,7 @@ function randKeywords(keywords) {
 
 // Create link li inside playlists ul
 function createSpotifyLink(playlistOptions) {
+  console.log(playlistOptions);
   // from array of playlists, choose random index and select that playlist
   var chosenPlaylist =
     playlistOptions[Math.floor(Math.random() * playlistOptions.length)];
