@@ -8,6 +8,8 @@ This applications provides Spotify playlist recommendations based on the user's 
 - The user inputs their birthday, then clicks "Get Sounds"
 - Outputs based on their daily horoscope include:
     - Spotify playlist recommendations (including the option to search again if they want different recommendations)
+    - Their horoscope sign's name and image
+        - Sign images are custom-designed by [Claudia](#contributors)!
     - Their horoscope's lucky number, color and mood
 - Previously searched birthdays are stored in localStorage, so that the user can easily return to the app for new recommendations every day!
 
