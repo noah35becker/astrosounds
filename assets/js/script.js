@@ -38,7 +38,7 @@ var searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
 const MAX_NUM_SEARCH_HISTORY = 4;
 
 // variables for spotify search & link creation
-const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
+const SPOTIFY_API_CALL_BUFFER = 2500; //2.5 seconds
 const NUM_SPOTIFY_PLAYLISTS = 4;
 const PLAYLIST_OPTIONS_PER_KEYWORD = 30;
 
@@ -215,7 +215,7 @@ function spotifySearch(keywords) {
   const options = {
     method: "GET",
     headers: {
-      "X-RapidAPI-Key": "00173b333cmsh7f497d732d65894p1a0c45jsn8fad42dfb52d",
+      "X-RapidAPI-Key": "0998422ae9msh631f094298f7caep1b0a7bjsnf6c1671b7893",
       "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com",
     },
   };
@@ -260,11 +260,15 @@ function randKeywords(keywords) {
   const keywordsLength = keywords.length;
 
   // while i < max # of playlists, and i < # of keywords (the latter in case there are fewer keywords available than the max # of playlists)
-  for (i = 0; i < NUM_SPOTIFY_PLAYLISTS && i < keywordsLength; i++)
+  for (i = 0; i < NUM_SPOTIFY_PLAYLISTS && i < keywordsLength; i++){
     // get random index of keywords and append word at that index to selected keywords array; also remove that word from the array, so it doesn't get randomly selected more than once
-    selectionOfKeywords.push(
-      keywords.splice(Math.floor(Math.random() * keywords.length), 1)[0]
-    );
+    var keyword = keywords.splice(Math.floor(Math.random() * keywords.length), 1)[0];
+
+    if (keyword === 'problem') // omit the keyword 'problem', which breaks the spotify api call
+      i--;
+    else
+      selectionOfKeywords.push(keyword);
+  }
   // return the random subset of keywords
   return selectionOfKeywords;
 }
