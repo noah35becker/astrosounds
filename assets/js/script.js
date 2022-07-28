@@ -145,22 +145,23 @@ function getHoroscope(month, day) {
   )
     .then((response) => response.json())
     .then((data) => {
-      // create horoscope object from api call data
-      var horoscopeObj = {
-        color: data.color,
-        desc: data.description,
-        luckyNum: data.lucky_number,
-        mood: data.mood,
-      };
-      // update sign wrapper to display data returned from call
-      $("#sign-wrapper img")
-        .attr("src", `./assets/images/signs/${signName}.png`)
-        .attr("alt", wordToTitleCase(signName) + " symbol");
-      $("#sign-wrapper h5").text(signName);
-      $("#sign-wrapper #lucky-number span").text(horoscopeObj.luckyNum);
-      $("#sign-wrapper #mood span").text(horoscopeObj.mood);
-      $("#sign-wrapper #color span").text(horoscopeObj.color);
-      console.log(horoscopeObj);
+        // create horoscope object from api call data
+        var horoscopeObj = {
+            color: data.color,
+            desc: data.description,
+            luckyNum: data.lucky_number,
+            mood: data.mood,
+        };
+        // update sign wrapper to display data returned from call
+        $("#sign-wrapper img")
+            .attr("src", `./assets/images/signs/${signName}.png`)
+            .attr("alt", wordToTitleCase(signName) + " symbol");
+        $("#sign-wrapper h5").text(signName);
+        $("#sign-wrapper #lucky-number span").text(horoscopeObj.luckyNum);
+        $("#sign-wrapper #mood span").text(horoscopeObj.mood);
+        $("#sign-wrapper #color span").text(horoscopeObj.color);
+        console.log(horoscopeObj);
+        console.log(horoscopeObj.desc);
       // call extractFromText passing horoscope object
       extractFromText(horoscopeObj);
     })
@@ -252,9 +253,13 @@ function spotifySearch(keywords) {
 function randKeywords(keywords) {
   // initialize empty array of selected words
   var selectionOfKeywords = [];
-  //   while i < max number of playlists and i < keywords length
-  for (i = 0; i < NUM_SPOTIFY_PLAYLISTS && i < keywords.length; i++)
-    //   get random index of keywords and append word at that index to selected keywords array
+  
+  // get length of keywords array (set here because it changes when the array is spliced below)
+  const keywordsLength = keywords.length;
+
+  // while i < max number of playlists and i < keywords length
+  for (i = 0; i < NUM_SPOTIFY_PLAYLISTS && i < keywordsLength; i++)
+    // get random index of keywords and append word at that index to selected keywords array
     selectionOfKeywords.push(
       keywords.splice(Math.floor(Math.random() * keywords.length), 1)[0]
     );
