@@ -37,7 +37,7 @@ const signWrapperEl = $("#sign-wrapper");
 var searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
 const MAX_NUM_SEARCH_HISTORY = 4;
 
-// variables for spotify search & button creation
+// variables for spotify search & link creation
 const SPOTIFY_API_CALL_BUFFER = 2200; //2.2 seconds
 const NUM_SPOTIFY_PLAYLISTS = 1;
 const PLAYLIST_OPTIONS_PER_KEYWORD = 15;
@@ -339,12 +339,10 @@ function errorMsg() {
     .append(
       $(
         `<h5 id="error-msg" class="red-text text-darken-4 center-align">
-                System error
-                <br/>
-                The page will refresh in <span>${secsTillRefresh} second${
-          secsTillRefresh > 1 ? "s" : ""
-        }</span>
-            </h5>`
+            System error
+            <br/>
+            The page will refresh in <span>${secsTillRefresh} second${secsTillRefresh > 1 ? "s" : ""}</span>
+        </h5>`
       )
     );
   // Run countdown that shows seconds until refresh, updating error message text
@@ -391,13 +389,15 @@ $("#birthday-input").on("submit", function (event) {
   $("#searched-birthday span").text(
     `${wordToTitleCase(submittedMonth)} ${submittedDay}`
   );
-  //  hide playlist try again text and empty the playlist ul
+  // hide playlist try again text and empty the playlists ul
   $("#try-again").attr("style", "display: none");
   $("#playlists").empty();
   // append loading graphic
   $("#loading-graphic").append(loadingGraphic);
-  // update results wrapper
+  // show results wrapper (if hidden)
   $("#results-wrapper").attr("style", "display: block");
+  // update text of music header, based on multiple playlists vs. just one
+  $('#music-header').text(`${NUM_SPOTIFY_PLAYLISTS > 1 ? 'Playlists' : 'A playlist'} for your horoscope`);
   // call horoscope function passing user input
   getHoroscope(submittedMonth, submittedDay);
 });
@@ -407,7 +407,7 @@ $("#birthday-history-list").on("click", ".birthday-btn", function () {
   // update selector element values to history button attributes
   monthSelectorEl.val($(this).attr("data-month"));
   daySelectorEl.val($(this).attr("data-day"));
-  // trigger change and and submit
+  // update number of days in day selector, and submit the birthday
   monthSelectorEl.trigger("change");
   $("#birthday-input").trigger("submit");
 });
