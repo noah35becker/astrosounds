@@ -1,0 +1,230 @@
+
+/* UTILITY CLASSES */
+    .no-margin{
+        margin: 0;
+    }
+
+
+
+/* GENERAL RULES */
+    body{
+        min-height: 100vh;
+        background-color: rgb(184, 222, 255); /* fallback */
+        background-image: linear-gradient(to bottom right, rgb(27, 217, 255), rgb(248, 251, 171));
+        background-repeat: no-repeat;
+        font-family: 'Ubuntu', sans-serif;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    header, footer{
+        flex-grow: 0;
+    }
+    body div{
+        flex-grow: 1;
+    }
+
+    p{
+        margin: 0;
+    }
+
+    .container.row{
+        margin-bottom: 0px;
+    }
+
+    img {
+        max-width: 75% !important;
+    }
+
+    h5{
+        font-size: 1.5rem;
+        line-height: 120%;
+    }
+
+    .btn{
+        height: auto;
+        line-height: 1.5;
+        padding: 10px 15px;
+        vertical-align: middle;
+    }
+    
+
+
+/* Header */
+    header h1{
+        font-family: 'Merriweather', 'Times New Roman', Times, serif;
+        font-weight: 400;
+        text-shadow: 2px 4px 8px white;
+        margin-top: 2.4rem;
+        margin-bottom: 0;
+    }
+
+    header h4{
+        font-style: italic;
+        margin-top: 1.3rem;
+        margin-bottom: 35px;
+        font-size: 2rem;
+        text-shadow: 2px 4px 8px white;
+        padding: 0 10px;
+    }
+
+
+
+/* User input / search history */
+    .collection, .collection-item{
+        margin-top: 10px !important;
+        border: none !important;
+    }
+
+    .search-btn{
+        line-height: 28px;
+        margin-top: 15px;
+    }
+
+    #birthday-input{
+        margin-bottom: 40px;
+    }
+
+    #birthday-input input{
+        border-bottom-color: rgb(87, 87, 87);
+    }
+
+    #birthday-history, .birthday-btn{
+        font-style: italic;
+    }
+
+    #birthday-history-header{
+        margin-bottom: 0;
+        font-size: 1.4rem;
+    }
+
+    #birthday-history-list{
+        margin-top: 0;
+    }
+
+    .birthday-btn{
+        width: 100%;
+        transition: opacity .4s;
+    }
+    .birthday-btn:hover{
+        opacity: .7;
+    }
+
+
+
+/* Results */
+    /* Header */
+        #results-header{
+            margin-bottom: 35px;
+        }
+
+        #results-header h5{
+            font-size: 1.8rem;
+        }
+
+        #results-header h5 span{
+            padding: 5px 10px;
+            white-space: nowrap;
+            border-radius: 20px;
+            font-size: 1.6rem;
+        }
+    
+
+    /* Sign */
+        #sign-wrapper h5, #sign-wrapper h6 span{
+            font-weight: bolder;
+        }
+
+        #sign-wrapper h5{
+            text-transform: capitalize;
+        }
+
+        #sign-image{
+            max-height: 150px;
+        }
+
+    
+    /* Playlists */
+        .playlist-item h5{
+            font-weight: bold;
+            opacity: 1;
+            transition: opacity .3s;
+        }
+        .playlist-item h5:hover{
+            opacity: .7;
+        }
+        
+        .playlist-item img{
+            padding-right: 0 !important;
+        }
+
+        #try-again{
+            line-height: 130%;
+            font-style: italic;
+        }
+
+        #try-again a{
+            font-weight: bolder;
+            font-style: normal;
+            cursor: pointer;
+            text-decoration: underline;
+            opacity: 1;
+            transition: opacity .3s;
+        }
+        #try-again a:hover{
+            opacity: .7;
+        }
+
+
+    /* Error msg */
+        #error-msg{
+            font-style: italic;
+        }
+        
+
+
+/* Footer */
+    footer{
+        margin-bottom: 15px;
+        padding: 0 20px;
+    }
+
+    footer h6{
+        font-size: 1.05rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+
+    footer a{
+        opacity: 1;
+        transition: opacity .3s;
+    }
+    footer a:hover{
+        opacity: .7;
+    }
+
+    footer .copyright{
+        font-style: normal;
+    }
+
+    footer h6 span.left-border{
+        border-left: 1px solid black;
+    }
+
+
+
+/* MEDIA QUERIES for responsive design (in tandem with Materialize CSS framework */
+@media screen and (max-width: 600px) {
+    header h1{
+        font-size: 3rem;
+    }
+
+    header h4{
+        font-size: 1.5rem;
+    }
+    
+    #birthday-history{
+        display: none;
+    }
+}

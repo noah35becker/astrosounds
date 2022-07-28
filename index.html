@@ -1,13 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="./assets/css/style.css"/>
-    <title>Document</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather&family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <title>Astrosounds</title>
+  </head>
+  <body>
+    <!-- header -->
+    <header>
+      <h1 class="center-align deep-orange-text text-darken-4">Astrosounds</h1>
+      <h4 class="col s12 center-align">
+        Spotify playlists based on today's horoscope
+      </h4>
+    </header>
+    <!-- container for body, excluding header & footer -->
+    <div class="container row">
+      <!-- input form / search history -->
+      <div id="user-input" class="col s12 m3">
+        <h5 class="center-align">When's your birthday?</h5>
+        <!-- birthday form -->
+        <form id="birthday-input" class="center-align">
+          <select
+            class="col s8 input-field"
+            name="month"
+            form="birthday-input"
+            required
+            autofocus
+          >
+            <option value="january">January</option>
+            <option value="february">February</option>
+            <option value="march">March</option>
+            <option value="april">April</option>
+            <option value="may">May</option>
+            <option value="june">June</option>
+            <option value="july">July</option>
+            <option value="august">August</option>
+            <option value="september">September</option>
+            <option value="october">October</option>
+            <option value="november">November</option>
+            <option value="december">December</option>
+          </select>
+          <select
+            class="col s4 input-field"
+            name="day"
+            form="birthday-input"
+            required
+          ></select>
+          <button class="btn search-btn waves-effect waves-light" type="submit">
+            Get sounds
+          </button>
+        </form>
+        <!-- search history -->
+        <div id="birthday-history">
+          <h5 id="birthday-history-header" class="center-align">
+            Previously searched:
+          </h5>
+          <ul id="birthday-history-list" class="collection"></ul>
+        </div>
+      </div>
+      <!-- api call results wrapper-->
+      <main
+        id="results-wrapper"
+        class="row col s12 m9"
+        style="display: none"
+      >
+        <!-- results header displaying current date and user input date -->
+        <div id="results-header">
+          <h5 id="todays-date" class="center-align">
+            Today's date:&nbsp;&nbsp;<span class="pink lighten-3"></span>
+          </h5>
+          <h5 id="searched-birthday" class="center-align">
+            Your birthday:&nbsp;&nbsp;<span class="pink lighten-3"></span>
+          </h5>
+        </div>
+        <!--  api results-->
+        <div id="results-content">
+          <!-- output from horoscope api -->
+          <div id="sign-wrapper" class="col s12 m4 l4 center-align">
+            <img id="sign-image" class="responsive-img" />
+            <h5></h5>
+            <h6 id="lucky-number">Lucky number:&nbsp;<span></span></h6>
+            <h6 id="mood">Mood:&nbsp;<span></span></h6>
+            <h6 id="color">Color:&nbsp;<span></span></h6>
+          </div>
+          <!-- output from spotify scraper api -->
+          <div id="music-wrapper" class="col s12 m8">
+            <h5 id="music-header" class="center-align"></h5>
+            <ul id="playlists"></ul>
+            <div id="loading-graphic" class="center-align"></div>
+            <h6 id="try-again" class="center-align">
+              Want to hear something different?
+              <br />
+              Click <a class="teal-text text-darken-1">Get Sounds</a> again for
+              another recommendation!
+            </h6>
+          </div>
+        </div>
+      </main>
+    </div>
+    <!-- footer -->
+    <footer class="center-align">
+      <h6>
+        Designed and coded by
+        <a
+          href="https://github.com/claudiayile"
+          target="_blank"
+          class="teal-text text-darken-2"
+          >Claudia Yile</a
+        >,
+        <a
+          href="https://github.com/mnwana"
+          target="_blank"
+          class="teal-text text-darken-2"
+          >Marielle Nwana</a
+        >,
+        <a
+          href="https://github.com/noah35becker"
+          target="_blank"
+          class="teal-text text-darken-2"
+          >Noah Becker</a
+        >
+        &nbsp;&nbsp;<span class="left-border"></span>&nbsp;&nbsp;
+        <span class="copyright">&copy;&nbsp;<span class="yr"></span></span>
+      </h6>
+    </footer>
+    <!-- js files -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@2.4.0/build/global/luxon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="./assets/js/script.js"></script>
-</body>
+  </body>
 </html>
