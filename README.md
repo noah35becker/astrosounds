@@ -1,4 +1,4 @@
-# AstroSounds
+# Astrosounds
 
 ## Deployed application
 [https://noah35becker.github.io/astrosounds/](https://noah35becker.github.io/astrosounds/)
