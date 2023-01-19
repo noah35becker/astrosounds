@@ -34,7 +34,7 @@ const daySelectorEl = $('select[name="day"]');
 const signWrapperEl = $("#sign-wrapper");
 
 // search history variables
-var searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+var searchHistory = JSON.parse(localStorage.getItem("astrosoundsSearchHistory")) || [];
 const MAX_NUM_SEARCH_HISTORY = 4;
 
 // variables for spotify search & link creation
@@ -316,7 +316,7 @@ function saveSearchHistory(newMonth, newDay) {
       searchHistory.pop();
   }
   // save to localStorage and reload search history on page
-  localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+  localStorage.setItem("astrosoundsSearchHistory", JSON.stringify(searchHistory));
   loadSearchHistory();
 }
 
