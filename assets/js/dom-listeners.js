@@ -2,7 +2,8 @@
 // IMPORTS
 import {daySelectorEl, monthSelectorEl, loadingGraphic} from './dom-elements.js';
 import {DateTime, setNumDays, wordToTitleCase} from './helpers.js';
-import {NUM_SPOTIFY_PLAYLISTS, getHoroscope} from './api-calls.js';
+import {NUM_SPOTIFY_PLAYLISTS} from './api-calls.js';
+import getHoroscope from './api-calls.js';
 
 
 

@@ -29,7 +29,7 @@ const signs = [
 
 
 // Get name of sign based on month and day
-export function getSignName(month, day){
+export default function getSignName(month, day){
     // turn <month, day> into <day of year>
     let dayOfYr = +DateTime.fromFormat(
         `${month} ${day} ${DUMMY_LEAP_YR}`,

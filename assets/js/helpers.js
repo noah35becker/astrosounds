@@ -19,7 +19,7 @@ export function setNumDays(month) {
         .diff(firstOfThisMonth, "days")
         .toObject().days;
   
-    let daySelected = daySelectorEl.val() || 1;  // ACCOUNT FOR HTML ELEMENT
+    let daySelected = daySelectorEl.val() || 1;
   
     daySelectorEl.empty();
     for (let i = 1; i <= daysInMonth; i++)

@@ -1,13 +1,13 @@
 
 // IMPORTS
-import {getSignName} from './astrological-signs.js';
+import getSignName from './get-sign-name.js';
 import {saveSearchHistory} from './search-history.js';
 import {wordToTitleCase, errorMsg} from './helpers.js';
 
 
 
 // SPOTIFY VARS
-const SPOTIFY_API_CALL_BUFFER = 2500; //2.5 secs
+const SPOTIFY_API_CALL_BUFFER = 2500; // 2.5 secs
 export const NUM_SPOTIFY_PLAYLISTS = 4;
 const PLAYLIST_OPTIONS_PER_KEYWORD = 30;
 
@@ -15,7 +15,7 @@ const PLAYLIST_OPTIONS_PER_KEYWORD = 30;
 
 // Get horoscope based on birthday (really, based on sign name)
 // (jQuery is imported via a <script> tag in index.html)
-export function getHoroscope(month, day){
+export default function getHoroscope(month, day){
     // get sign name based on birthdate
     const signName = getSignName(month, day);
     
@@ -70,7 +70,7 @@ function extractFromText(horoscopeObj){
                 "X-RapidAPI-Key": "db93cfc0d2mshb30b8e666594cd2p1659b8jsn866b6f92afba",
                 "X-RapidAPI-Host": "textprobe.p.rapidapi.com",
             },
-            body: JSON.stringify({text: horoscopeObj.desc})  // CONFIRM THAT THIS WORKS
+            body: JSON.stringify({text: horoscopeObj.desc})
           }
     ).then(response => response.json())
     .then(data => {  // pass extracted keywords to spotify search function

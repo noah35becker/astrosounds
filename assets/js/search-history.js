@@ -1,7 +1,7 @@
 
 const localStorageVarName = 'astrosoundsSearchHistory';
 
-const searchHistory = JSON.parse(localStorage.getItem(localStorageVarName)) || []; //OKAY THAT THIS IS CONST?
+const searchHistory = JSON.parse(localStorage.getItem(localStorageVarName)) || [];
 
 const MAX_NUM_SEARCH_HISTORY = 4;
 
