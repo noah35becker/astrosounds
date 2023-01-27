@@ -3,7 +3,7 @@
 import {daySelectorEl, monthSelectorEl, loadingGraphic} from './dom-elements.js';
 import {DateTime, setNumDays, wordToTitleCase} from './helpers.js';
 import {NUM_SPOTIFY_PLAYLISTS} from './api-calls.js';
-import getHoroscope from './api-calls.js';
+import apiChain from './api-calls.js';
 
 
 
@@ -50,7 +50,7 @@ $("#birthday-input").on("submit", event => {
     $('#music-header').text(`${NUM_SPOTIFY_PLAYLISTS > 1 ? 'Playlists' : 'A playlist'} for your horoscope`);
     
     // initialize chain of API calls
-    getHoroscope(submittedMonth, submittedDay);
+    apiChain(submittedMonth, submittedDay);
 });
   
 
